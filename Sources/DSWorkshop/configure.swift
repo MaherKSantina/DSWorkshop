@@ -13,7 +13,7 @@ public class DSWorkshopMain {
 
     public init() { }
 
-    public func accountingConfigure(migrations: inout MigrationConfig) throws {
+    public func workshopConfigure(migrations: inout MigrationConfig) throws {
 
         migrations.add(migration: EnableReferencesMigration.self, database: .mysql)
 
