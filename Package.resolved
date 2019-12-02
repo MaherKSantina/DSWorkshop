@@ -39,11 +39,11 @@
       },
       {
         "package": "DSCore",
-        "repositoryURL": "git@github.com:MaherKSantina/DSCore.git",
+        "repositoryURL": "https://github.com/MaherKSantina/DSCore.git",
         "state": {
           "branch": null,
-          "revision": "987e9bf2df7acb18b6dfd9f5b9926b3fc7ad0b60",
-          "version": "0.1.5"
+          "revision": "f0d2ab74b3c2c7862271f69b3c24cce493fb470b",
+          "version": "0.1.7"
         }
       },
       {
