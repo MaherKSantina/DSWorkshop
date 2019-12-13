@@ -111,30 +111,37 @@ final class DSWMSTests: WMSTestCase {
         let _ = WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn)
         let _ = WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn)
         let users = try sut.getAllUsers(on: conn).wait()
-        XCTAssertEqual(users[0].userEmail, "u1@gmail.com")
-        XCTAssertEqual(users[1].userEmail, "u2@gmail.com")
+        XCTAssertEqual(users[0].email, "u1@gmail.com")
+        XCTAssertEqual(users[1].email, "u2@gmail.com")
+    }
+
+    func testGetUserById_ShouldGetCorrectly() throws {
+        let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
+        let user2 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let user = try sut.getUser(id: try user2.requireID(), on: conn).wait()
+        XCTAssertEqual(user.email, "u2@gmail.com")
     }
 
     func testCreateUser_ShouldCreateCorrectly() throws {
         let form = UserForm(id: nil, email: "u@e.com")
         let _ = try sut.createUser(user: form, on: conn).wait()
         let users = try sut.getAllUsers(on: conn).wait()
-        XCTAssertEqual(users[0].userEmail, "u@e.com")
+        XCTAssertEqual(users[0].email, "u@e.com")
     }
 
     func testUpdateUser_ShouldCreateCorrectly() throws {
         let form = UserForm(id: nil, email: "u@e.com")
         let newUser = try sut.createUser(user: form, on: conn).wait()
-        let update = UserForm(id: newUser.userId, email: "newu@e.com")
+        let update = UserForm(id: newUser.id, email: "newu@e.com")
         let _ = try sut.updateUser(user: update, on: conn).wait()
         let users = try sut.getAllUsers(on: conn).wait()
-        XCTAssertEqual(users[0].userEmail, "newu@e.com")
+        XCTAssertEqual(users[0].email, "newu@e.com")
     }
 
     func testDeleteUser_ShouldDeleteCorrectly() throws {
         let form = UserForm(id: nil, email: "u@e.com")
         let newUser = try sut.createUser(user: form, on: conn).wait()
-        let _ = try sut.deleteUser(id: newUser.userId, on: conn)
+        let _ = try sut.deleteUser(id: newUser.id, on: conn)
         let users = try sut.getAllUsers(on: conn).wait()
         XCTAssertEqual(users.count, 0)
     }

@@ -20,25 +20,15 @@ extension WMSLoginFormRepresentable {
     }
 }
 
-extension AccessDto: WMSAccessRepresentable {
-    public var accessAccessToken: String {
-        return accessToken
+extension AccessDto {
+    public var wmsAccess: WMSAccess {
+        return WMSAccess(token: accessToken)
     }
 }
 
 extension DSAuthMain {
     public static func registerAndLogin(user: UserRow.Register, on: DatabaseConnectable, container: Container) throws -> EventLoopFuture<AccessDto> {
         return DSAuthMain.register(user: user, on: on, container: container).flatMap{ try DSAuthMain.login(user: .init(email: $0.User_email, password: $0.Login_password, organizationID: $0.Login_organizationID), on: container) }
-    }
-}
-
-extension UserRow: WMSUserRepresentable {
-    public var userId: Int {
-        return try! requireID()
-    }
-
-    public var userEmail: String {
-        return email
     }
 }
 

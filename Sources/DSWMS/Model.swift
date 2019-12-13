@@ -18,15 +18,6 @@ public protocol WMSRegisterFromRepresentable {
     var registerPassword: String { get }
 }
 
-public protocol WMSAccessRepresentable {
-    var accessAccessToken: String { get }
-}
-
-public protocol WMSUserRepresentable {
-    var userId: Int { get }
-    var userEmail: String { get }
-}
-
 public protocol WMSCreateUserFormRepresentable {
     var userCreateFormEmail: String { get }
 }
@@ -49,7 +40,7 @@ public protocol WMSJobRepresentable {
 public protocol WMSVehicleRepresentable {
     var vehicleId: Int { get }
     var vehicleName: String { get }
-    var vehicleUser: WMSUserRepresentable { get }
+    var vehicleUser: WMSUser { get }
 }
 
 public protocol WMSCreateVehicleFormRepresentable {

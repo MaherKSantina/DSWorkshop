@@ -17,16 +17,6 @@ struct WMSUserRow: DSModel {
     }
 }
 
-extension WMSUserRow: WMSUserRepresentable {
-    var userId: Int {
-        return try! requireID()
-    }
-
-    var userEmail: String {
-        return email
-    }
-}
-
 extension WMSCreateUserFormRepresentable {
     var wmsUserRow: WMSUserRow {
         return WMSUserRow(id: nil, email: userCreateFormEmail)
