@@ -9,21 +9,22 @@ public class DSWMS {
 
     public static func configure(migrations: inout MigrationConfig) {
         DSAuthMain.configure(migrations: &migrations)
+        migrations.add(model: WMSUserRow.self, database: .mysql)
     }
 }
 
 extension DSWMS: WMSDelegate {
 
     public func deleteUser(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
-        return UserRow(id: id, email: "").delete(on: on)
+        return id.wmsUserRow.delete(on: on)
     }
 
     public func updateUser(user: WMSUpdateUserFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSUserRepresentable> {
-        return user.authUserRow.save(on: on).map{ $0 }
+        return user.wmsUserRow.save(on: on).map{ $0 }
     }
 
     public func createUser(user: WMSCreateUserFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSUserRepresentable> {
-        return user.authUserRow.save(on: on).map{ $0 } 
+        return user.wmsUserRow.save(on: on).map{ $0 } 
     }
 
     public func getUser(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSUserRepresentable> {
@@ -31,7 +32,7 @@ extension DSWMS: WMSDelegate {
     }
 
     public func getAllUsers(on: DatabaseConnectable) -> EventLoopFuture<[WMSUserRepresentable]> {
-        return UserRow.query(on: on).all().map{ $0 }
+        return WMSUserRow.query(on: on).all().map{ $0 }
     }
 
     public func register(user: WMSRegisterFromRepresentable, on: DatabaseConnectable, container: Container) throws -> EventLoopFuture<WMSAccessRepresentable> {

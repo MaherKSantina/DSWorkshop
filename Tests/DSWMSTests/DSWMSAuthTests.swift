@@ -25,7 +25,24 @@ struct UserLogin: WMSLoginFormRepresentable, WMSRegisterFromRepresentable {
     }
 }
 
-final class DSWMSAuthTests: WMSTestCase {
+struct UserForm: WMSCreateUserFormRepresentable, WMSUpdateUserFormRepresentable {
+    var userCreateFormEmail: String {
+        return email
+    }
+
+    var userUpdateFormId: Int {
+        return id!
+    }
+
+    var userUpdateFormEmail: String {
+        return email
+    }
+
+    var id: Int?
+    var email: String
+}
+
+final class DSWMSTests: WMSTestCase {
 
     var sut: DSWMS!
 
@@ -34,11 +51,13 @@ final class DSWMSAuthTests: WMSTestCase {
         sut = DSWMS()
     }
 
-    func testLogin_ExistingUser_ShouldLoginProperly() throws {
-        let user1 = try UserRow(id: nil, email: "user1@gmail.com").save(on: conn).wait()
-        let _ = try UserRow(id: nil, email: "user2@gmail.com").save(on: conn).wait()
-        let _ = try LoginRow(id: nil, userID: try user1.requireID(), password: "asdfgh", organizationID: nil, roleID: RoleRowValue.Admin.index!).save(on: conn).wait()
+    func addLogin(login: UserLogin = UserLogin(email: "user1@gmail.com", password: "asdfgh")) throws {
+        let user1 = try UserRow(id: nil, email: login.email).save(on: conn).wait()
+        let _ = try LoginRow(id: nil, userID: try user1.requireID(), password: login.password, organizationID: nil, roleID: RoleRowValue.Admin.index!).save(on: conn).wait()
+    }
 
+    func testLogin_ExistingUser_ShouldLoginProperly() throws {
+        try addLogin()
         let _ = try sut.login(user: UserLogin(email: "user1@gmail.com", password: "asdfgh"), on: app).wait()
     }
 
@@ -86,5 +105,37 @@ final class DSWMSAuthTests: WMSTestCase {
 
     func testConvertAccessDto_ShouldConvertProperly() throws {
         // TODO: Implement
+    }
+
+    func testGetAllUsers_ShouldGetCorrectly() throws {
+        let _ = WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn)
+        let _ = WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn)
+        let users = try sut.getAllUsers(on: conn).wait()
+        XCTAssertEqual(users[0].userEmail, "u1@gmail.com")
+        XCTAssertEqual(users[1].userEmail, "u2@gmail.com")
+    }
+
+    func testCreateUser_ShouldCreateCorrectly() throws {
+        let form = UserForm(id: nil, email: "u@e.com")
+        let _ = try sut.createUser(user: form, on: conn).wait()
+        let users = try sut.getAllUsers(on: conn).wait()
+        XCTAssertEqual(users[0].userEmail, "u@e.com")
+    }
+
+    func testUpdateUser_ShouldCreateCorrectly() throws {
+        let form = UserForm(id: nil, email: "u@e.com")
+        let newUser = try sut.createUser(user: form, on: conn).wait()
+        let update = UserForm(id: newUser.userId, email: "newu@e.com")
+        let _ = try sut.updateUser(user: update, on: conn).wait()
+        let users = try sut.getAllUsers(on: conn).wait()
+        XCTAssertEqual(users[0].userEmail, "newu@e.com")
+    }
+
+    func testDeleteUser_ShouldDeleteCorrectly() throws {
+        let form = UserForm(id: nil, email: "u@e.com")
+        let newUser = try sut.createUser(user: form, on: conn).wait()
+        let _ = try sut.deleteUser(id: newUser.userId, on: conn)
+        let users = try sut.getAllUsers(on: conn).wait()
+        XCTAssertEqual(users.count, 0)
     }
 }
