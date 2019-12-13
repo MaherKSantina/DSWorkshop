@@ -5,14 +5,14 @@
 //  Created by Maher Santina on 12/13/19.
 //
 
-import Foundation
+import Vapor
 
-public struct WMSAuthUser {
+public struct WMSAuthUser: Content {
     public var id: Int
     public var email: String
 }
 
-public struct WMSUser {
+public struct WMSUser: Content {
     public var id: Int
     public var email: String
 
@@ -22,6 +22,6 @@ public struct WMSUser {
     }
 }
 
-public struct WMSAccess {
+public struct WMSAccess: Content {
     public var token: String
 }
