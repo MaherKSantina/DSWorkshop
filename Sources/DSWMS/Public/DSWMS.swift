@@ -2,6 +2,7 @@
 import Vapor
 import DSAuth
 import Fluent
+import FluentMySQL
 import DSWorkshop
 
 public class DSWMS {
@@ -16,6 +17,10 @@ public class DSWMS {
 }
 
 extension DSWMS: WMSDelegate {
+    public func getUsers(queryString: String, on: DatabaseConnectable) -> EventLoopFuture<[WMSUser]> {
+        return WMSUserRow.query(on: on).filter(\.email == queryString).all().map{ $0.map(WMSUser.init) }
+    }
+
 
     public func updateVehicle(user: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
         return user.workshopVehicleRow.save(on: on).map{ $0.wmsVehicle }

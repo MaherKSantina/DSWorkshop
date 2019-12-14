@@ -149,6 +149,13 @@ final class DSWMSTests: WMSTestCase {
         XCTAssertEqual(user.email, "u2@gmail.com")
     }
 
+    func testGetUserByFilter_ShouldGetCorrectly() throws {
+        let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
+        let user2 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let users = try sut.getUsers(queryString: "u1@gmail.com", on: conn).wait()
+        XCTAssertEqual(users.count, 1)
+    }
+
     func testCreateUser_ShouldCreateCorrectly() throws {
         let form = UserForm(id: nil, email: "u@e.com")
         let _ = try sut.createUser(user: form, on: conn).wait()
