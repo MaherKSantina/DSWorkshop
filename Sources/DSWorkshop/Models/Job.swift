@@ -32,6 +32,8 @@ extension JobRow: DSModel {
     }
 
     public static var entity: String = "Job"
+
+    static var defaultDatabase: DatabaseIdentifier<MySQLDatabase>? = .mysql
 }
 
 extension JobRow: Hashable {

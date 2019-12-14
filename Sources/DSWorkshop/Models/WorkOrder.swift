@@ -38,6 +38,8 @@ extension WorkOrderRow: DSModel {
     }
 
     public static var entity: String = "WorkOrder"
+
+    static var defaultDatabase: DatabaseIdentifier<MySQLDatabase>? = .mysql
 }
 
 extension WorkOrderRow: Hashable {

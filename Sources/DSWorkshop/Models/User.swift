@@ -32,6 +32,8 @@ extension WorkshopUserRow: DSModel {
     }
 
     public static var entity: String = "WorkshopUser"
+
+    static var defaultDatabase: DatabaseIdentifier<MySQLDatabase>? = .mysql
 }
 
 extension WorkshopUserRow: Hashable {

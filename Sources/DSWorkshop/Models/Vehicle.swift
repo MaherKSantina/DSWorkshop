@@ -35,6 +35,8 @@ extension VehicleRow: DSModel {
     }
 
     public static var entity: String = "Vehicle"
+
+    static var defaultDatabase: DatabaseIdentifier<MySQLDatabase>? = .mysql
 }
 
 extension VehicleRow: Hashable {
