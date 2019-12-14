@@ -28,11 +28,11 @@ public struct WMSAccess: Content {
 
 public struct WMSVehicle: Content {
 
-    public var id: Int?
+    public var id: Int
     public var name: String
     public var userID: Int
 
-    public init(id: Int? = nil, name: String, userID: Int) {
+    public init(id: Int, name: String, userID: Int) {
         self.id = id
         self.name = name
         self.userID = userID

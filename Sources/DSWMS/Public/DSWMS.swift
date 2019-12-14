@@ -11,6 +11,7 @@ public class DSWMS {
     public static func configure(migrations: inout MigrationConfig) {
         DSAuthMain.configure(migrations: &migrations)
         migrations.add(model: WMSUserRow.self, database: .mysql)
+        try! DSWorkshopMain().workshopConfigure(migrations: &migrations)
     }
 }
 

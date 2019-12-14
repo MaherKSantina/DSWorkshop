@@ -2,6 +2,7 @@ import XCTest
 @testable import DSWMS
 import DSAuth
 import FluentMySQL
+import DSWorkshop
 
 struct UserLogin: WMSLoginFormRepresentable, WMSRegisterFromRepresentable {
 
@@ -40,6 +41,32 @@ struct UserForm: WMSCreateUserFormRepresentable, WMSUpdateUserFormRepresentable 
 
     var id: Int?
     var email: String
+}
+
+struct VehicleForm: WMSCreateVehicleFormRepresentable, WMSUpdateVehicleFormRepresentable {
+    var vehicleCreateFormName: String {
+        return name
+    }
+
+    var vehicleCreateFormUserId: Int {
+        return userID
+    }
+
+    var vehicleUpdateFormId: Int {
+        return id!
+    }
+
+    var vehicleUpdateFormName: String {
+        return name
+    }
+
+    var vehicleUpdateFormUserId: Int {
+        return userID
+    }
+
+    var id: Int?
+    var name: String
+    var userID: Int
 }
 
 final class DSWMSTests: WMSTestCase {
@@ -144,5 +171,47 @@ final class DSWMSTests: WMSTestCase {
         let _ = try sut.deleteUser(id: newUser.id, on: conn)
         let users = try sut.getAllUsers(on: conn).wait()
         XCTAssertEqual(users.count, 0)
+    }
+
+    func testGetAllVehicles_ShouldGetCorrectly() throws {
+        let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
+        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        XCTAssertEqual(vehicles[0].name, "v1")
+    }
+
+    func testGetVehicleById_ShouldGetCorrectly() throws {
+        let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
+        let v2 = try VehicleRow(id: nil, name: "v2", userID: try! user1.requireID()).save(on: conn).wait()
+        let vehicle = try sut.getVehicle(id: try v2.requireID(), on: conn).wait()
+        XCTAssertEqual(vehicle.name, "v2")
+    }
+
+    func testCreateVehicle_ShouldCreateCorrectly() throws {
+        let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let form = VehicleForm(id: nil, name: "v1", userID: try! user1.requireID())
+        let _ = try sut.createVehicle(user: form, on: conn).wait()
+        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        XCTAssertEqual(vehicles[0].name, "v1")
+    }
+
+    func testUpdateVehicle_ShouldCreateCorrectly() throws {
+        let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let form = VehicleForm(id: nil, name: "v1", userID: try! user1.requireID())
+        let newVehicle = try sut.createVehicle(user: form, on: conn).wait()
+        let update = VehicleForm(id: newVehicle.id, name: "v2", userID: try! user1.requireID())
+        let _ = try sut.updateVehicle(user: update, on: conn).wait()
+        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        XCTAssertEqual(vehicles[0].name, "v2")
+    }
+
+    func testDeleteVehicle_ShouldDeleteCorrectly() throws {
+        let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let form = VehicleForm(id: nil, name: "v1", userID: try! user1.requireID())
+        let newVehicle = try sut.createVehicle(user: form, on: conn).wait()
+        let _ = try sut.deleteVehicle(id: newVehicle.id, on: conn).wait()
+        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        XCTAssertEqual(vehicles.count, 0)
     }
 }
