@@ -25,3 +25,16 @@ public struct WMSUser: Content {
 public struct WMSAccess: Content {
     public var token: String
 }
+
+public struct WMSVehicle {
+
+    public var id: Int?
+    public var name: String
+    public var userID: Int
+
+    public init(id: Int? = nil, name: String, userID: Int) {
+        self.id = id
+        self.name = name
+        self.userID = userID
+    }
+}

@@ -37,12 +37,6 @@ public protocol WMSJobRepresentable {
     var workOrderJame: String { get }
 }
 
-public protocol WMSVehicleRepresentable {
-    var vehicleId: Int { get }
-    var vehicleName: String { get }
-    var vehicleUser: WMSUser { get }
-}
-
 public protocol WMSCreateVehicleFormRepresentable {
     var vehicleCreateFormName: String { get }
     var vehicleCreateFormUserId: Int { get }
@@ -51,4 +45,5 @@ public protocol WMSCreateVehicleFormRepresentable {
 public protocol WMSUpdateVehicleFormRepresentable {
     var vehicleUpdateFormId: Int { get }
     var vehicleUpdateFormName: String { get }
+    var vehicleUpdateFormUserId: Int { get }
 }

@@ -1,15 +1,41 @@
-//
-//  File.swift
-//  
-//
-//  Created by Maher Santina on 12/13/19.
-//
 
 import Vapor
 import DSAuth
+import Fluent
+import DSWorkshop
 
+public class DSWMS {
+
+    public init() { }
+
+    public static func configure(migrations: inout MigrationConfig) {
+        DSAuthMain.configure(migrations: &migrations)
+        migrations.add(model: WMSUserRow.self, database: .mysql)
+    }
+}
 
 extension DSWMS: WMSDelegate {
+
+    public func updateVehicle(user: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
+        return user.workshopVehicleRow.save(on: on).map{ $0.wmsVehicle }
+    }
+
+    public func createVehicle(user: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
+        return user.workshopVehicleRow.save(on: on).map{ $0.wmsVehicle }
+    }
+
+    public func getVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
+        return VehicleRow.find(id, on: on).unwrap(or: Abort(.notFound)).map{ $0.wmsVehicle }
+    }
+
+    public func getAllVehicles(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle]> {
+        return VehicleRow.query(on: on).all().map{ $0.map{ $0.wmsVehicle } }
+    }
+
+    public func deleteVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
+        return VehicleRow.find(id, on: on).flatMap{ $0?.delete(on: on) ?? on.future(()) }
+    }
+
 
     public func deleteUser(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
         return id.wmsUserRow.delete(on: on)
