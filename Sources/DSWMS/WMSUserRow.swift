@@ -7,6 +7,7 @@
 
 import Foundation
 import DSCore
+import FluentMySQL
 
 struct WMSUserRow: DSModel {
     var id: Int?
