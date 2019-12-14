@@ -15,6 +15,8 @@ struct WMSUserRow: DSModel {
     static func routePath() throws -> String {
         return ""
     }
+
+    static var defaultDatabase: DatabaseIdentifier<MySQLDatabase>? = .mysql
 }
 
 extension WMSCreateUserFormRepresentable {
