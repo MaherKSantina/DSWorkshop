@@ -26,7 +26,7 @@ public struct WMSAccess: Content {
     public var token: String
 }
 
-public struct WMSVehicle {
+public struct WMSVehicle: Content {
 
     public var id: Int?
     public var name: String
