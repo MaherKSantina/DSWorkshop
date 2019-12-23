@@ -10,7 +10,7 @@ import Fluent
 import FluentMySQL
 import DSCore
 
-public struct JobRow {
+public struct JobRow: MySQLModel {
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case id
