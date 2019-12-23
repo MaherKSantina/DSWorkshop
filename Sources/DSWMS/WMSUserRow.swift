@@ -9,7 +9,7 @@ import Foundation
 import DSCore
 import FluentMySQL
 
-struct WMSUserRow: DSModel {
+struct WMSUserRow: MySQLModel, DSModel {
     var id: Int?
     var email: String
 
@@ -18,6 +18,8 @@ struct WMSUserRow: DSModel {
     }
 
     static var defaultDatabase: DatabaseIdentifier<MySQLDatabase>? = .mysql
+
+    static var entity: String = "WMSUser"
 }
 
 extension WMSCreateUserFormRepresentable {

@@ -135,8 +135,8 @@ final class DSWMSTests: WMSTestCase {
     }
 
     func testGetAllUsers_ShouldGetCorrectly() throws {
-        let _ = WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn)
-        let _ = WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn)
+        let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
+        let _ = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
         let users = try sut.getAllUsers(on: conn).wait()
         XCTAssertEqual(users[0].email, "u1@gmail.com")
         XCTAssertEqual(users[1].email, "u2@gmail.com")
@@ -153,6 +153,13 @@ final class DSWMSTests: WMSTestCase {
         let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
         let user2 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
         let users = try sut.getUsers(queryString: "u1@gmail.com", on: conn).wait()
+        XCTAssertEqual(users.count, 1)
+    }
+
+    func testGetUserByFilter_2_ShouldGetCorrectly() throws {
+        let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
+        let user2 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let users = try sut.getUsers(queryString: "u1", on: conn).wait()
         XCTAssertEqual(users.count, 1)
     }
 
@@ -175,7 +182,7 @@ final class DSWMSTests: WMSTestCase {
     func testDeleteUser_ShouldDeleteCorrectly() throws {
         let form = UserForm(id: nil, email: "u@e.com")
         let newUser = try sut.createUser(user: form, on: conn).wait()
-        let _ = try sut.deleteUser(id: newUser.id, on: conn)
+        let _ = try sut.deleteUser(id: newUser.id, on: conn).wait()
         let users = try sut.getAllUsers(on: conn).wait()
         XCTAssertEqual(users.count, 0)
     }

@@ -18,49 +18,51 @@ public class DSWMS {
 
 extension DSWMS: WMSDelegate {
     public func getUsers(queryString: String, on: DatabaseConnectable) -> EventLoopFuture<[WMSUser]> {
-        return WMSUserRow.query(on: on).filter(\.email == queryString).all().map{ $0.map(WMSUser.init) }
+        return WMSUserRow.all(where: "email LIKE '%\(queryString)%'", req: on).map{ $0.map(WMSUser.init) }
     }
 
-
     public func updateVehicle(user: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return user.workshopVehicleRow.save(on: on).map{ $0.wmsVehicle }
+        return VehicleRow.update(value: user.workshopVehicleRow, req: on).map{ $0.wmsVehicle }
     }
 
     public func createVehicle(user: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return user.workshopVehicleRow.save(on: on).map{ $0.wmsVehicle }
+        return VehicleRow.create(value: user.workshopVehicleRow, req: on).map{ $0.wmsVehicle }
     }
 
     public func getVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return VehicleRow.find(id, on: on).unwrap(or: Abort(.notFound)).map{ $0.wmsVehicle }
+        return VehicleRow.first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).map{ $0.wmsVehicle }
     }
 
     public func getAllVehicles(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle]> {
+        return VehicleRow.all(where: nil, req: on).map{ $0.map{ $0.wmsVehicle } }
+    }
+
+    public func getAllVehicles2(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle]> {
         return VehicleRow.query(on: on).all().map{ $0.map{ $0.wmsVehicle } }
     }
 
     public func deleteVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
-        return VehicleRow.find(id, on: on).flatMap{ $0?.delete(on: on) ?? on.future(()) }
+        return VehicleRow.first(where: "id = \(id)", req: on).flatMap{ $0?.delete(on: on) ?? on.future(()) }
     }
 
-
     public func deleteUser(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
-        return id.wmsUserRow.delete(on: on)
+        return WMSUserRow.delete(value: id.wmsUserRow, req: on)
     }
 
     public func updateUser(user: WMSUpdateUserFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSUser> {
-        return user.wmsUserRow.save(on: on).map(WMSUser.init)
+        return WMSUserRow.update(value: user.wmsUserRow, req: on).map(WMSUser.init)
     }
 
     public func createUser(user: WMSCreateUserFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSUser> {
-        return user.wmsUserRow.save(on: on).map(WMSUser.init)
+        return WMSUserRow.create(value: user.wmsUserRow, req: on).map(WMSUser.init)
     }
 
     public func getUser(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSUser> {
-        return WMSUserRow.find(id, on: on).unwrap(or: Abort(.notFound)).map(WMSUser.init)
+        return WMSUserRow.first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).map(WMSUser.init)
     }
 
     public func getAllUsers(on: DatabaseConnectable) -> EventLoopFuture<[WMSUser]> {
-        return WMSUserRow.query(on: on).all().map{ $0.map(WMSUser.init) }
+        return WMSUserRow.all(where: nil, req: on).map{ $0.map(WMSUser.init) }
     }
 
     public func register(user: WMSRegisterFromRepresentable, on: DatabaseConnectable, container: Container) throws -> EventLoopFuture<WMSAccess> {
