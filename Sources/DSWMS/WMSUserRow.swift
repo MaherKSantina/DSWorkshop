@@ -9,17 +9,11 @@ import Foundation
 import DSCore
 import FluentMySQL
 
-struct WMSUserRow: MySQLModel, DSModel {
-    var id: Int?
-    var email: String
+public struct WMSUserRow: MySQLModel, DSModel {
+    public var id: Int?
+    public var email: String
 
-    static func routePath() throws -> String {
-        return ""
-    }
-
-    static var defaultDatabase: DatabaseIdentifier<MySQLDatabase>? = .mysql
-
-    static var entity: String = "WMSUser"
+    public static var entity: String = "WMSUser"
 }
 
 extension WMSCreateUserFormRepresentable {

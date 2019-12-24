@@ -152,7 +152,7 @@ final class DSWMSTests: WMSTestCase {
     func testGetUserByFilter_ShouldGetCorrectly() throws {
         let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
         let user2 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let users = try sut.getUsers(queryString: "u1@gmail.com", on: conn).wait()
+        let users = try sut.getUsers(queryString: "u1", on: conn).wait()
         XCTAssertEqual(users.count, 1)
     }
 
@@ -192,6 +192,14 @@ final class DSWMSTests: WMSTestCase {
         let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
         let vehicles = try sut.getAllVehicles(on: conn).wait()
         XCTAssertEqual(vehicles[0].name, "v1")
+    }
+
+    func testGetAllVehicles2_ShouldGetCorrectly() throws {
+        let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
+        let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
+        let vehicles = try sut.getAllVehicles2(on: conn).wait()
+        XCTAssertEqual(vehicles[0].name, "v1")
+        XCTAssertEqual(vehicles[0].user.email, "u2@gmail.com")
     }
 
     func testGetVehicleById_ShouldGetCorrectly() throws {

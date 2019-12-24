@@ -6,6 +6,12 @@
 //
 
 import Vapor
+import DSCore
+import DSWorkshop
+
+public protocol WMSDSViewRelated: DSView {
+    associatedtype View: DSView
+}
 
 public struct WMSAuthUser: Content {
     public var id: Int
@@ -77,12 +83,43 @@ public struct WMSVehicle: Content {
     }
 }
 
-public struct WMSVehicleUser: Content {
-    public var vehicle_id: Int
-    public var vehicle_name: String
-    public var vehicle_userID: String
-    public var user_id: Int
-    public var user_email: String
+public struct WMSVehicleUser {
+    public var Vehicle_id: Int
+    public var Vehicle_name: String
+    public var Vehicle_userID: Int
+    public var WMSUser_id: Int
+    public var WMSUser_email: String
+}
+
+extension WMSVehicleUser: DSTwoModelView {
+    public typealias Model1 = VehicleRow
+    public typealias Model2 = WMSUserRow
+
+    public static var entity: String {
+        return tableName
+    }
+
+    public static var join: JoinRelationship {
+        return .init(type: .inner, key1: "userID", key2: "id")
+    }
+    public static var model1selectFields: [String] {
+        return [
+            "id",
+            "name",
+            "userID"
+        ]
+    }
+    public static var model2selectFields: [String] {
+        return [
+            "id",
+            "email"
+        ]
+    }
+
+    public var wmsVehicle2: WMSVehicle2 {
+        let user = WMSUser(id: WMSUser_id, email: WMSUser_email)
+        return WMSVehicle2(id: Vehicle_id, name: Vehicle_name, user: user)
+    }
 }
 
 public struct WMSVehicle2: Content {
@@ -145,11 +182,11 @@ extension Future where T: WMSVehicleConvertible2 {
 
 extension WMSVehicleUser: WMSUserRepresentable {
     public var wmsUserId: Int {
-        return user_id
+        return WMSUser_id
     }
 
     public var wmsUserEmail: String {
-        return user_email
+        return WMSUser_email
     }
 }
 
@@ -159,14 +196,16 @@ extension WMSVehicleUser: WMSVehicleRepresentable, WMSVehicleRepresentable2 {
     }
 
     public var wmsVehicleId: Int {
-        return vehicle_id
+        return Vehicle_id
     }
 
     public var wmsVehicleName: String {
-        return vehicle_name
+        return Vehicle_name
     }
 
     public var wmsVehicleUserID: Int {
-        return user_id
+        return Vehicle_userID
     }
 }
+
+//extension WMSVehicle2: WMSDSViewRelated

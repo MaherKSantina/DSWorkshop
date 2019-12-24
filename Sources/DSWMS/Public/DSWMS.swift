@@ -4,6 +4,7 @@ import DSAuth
 import Fluent
 import FluentMySQL
 import DSWorkshop
+import DSCore
 
 public class DSWMS {
 
@@ -13,6 +14,7 @@ public class DSWMS {
         DSAuthMain.configure(migrations: &migrations)
         migrations.add(model: WMSUserRow.self, database: .mysql)
         try! DSWorkshopMain().workshopConfigure(migrations: &migrations)
+        migrations.add(migration: WMSVehicleUser.self, database: .mysql)
     }
 }
 
@@ -34,11 +36,15 @@ extension DSWMS: WMSDelegate {
     }
 
     public func getAllVehicles(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle]> {
-        return VehicleRow.all(where: nil, req: on).map{ $0.map{ $0.wmsVehicle } }
+        return getAll(type: VehicleRow.self, on: on).map{ $0.map{ $0.wmsVehicle } }
     }
 
-    public func getAllVehicles2(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle]> {
-        return VehicleRow.query(on: on).all().map{ $0.map{ $0.wmsVehicle } }
+    public func getAllVehicles2(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle2]> {
+        return getAll(type: WMSVehicleUser.self, on: on).map{ $0.map{ $0.wmsVehicle2 } }
+    }
+
+    public func getAll<T: DSDatabaseReadOnlyInteractable>(type: T.Type, on: DatabaseConnectable) -> Future<[T]> {
+        return T.all(where: nil, req: on)
     }
 
     public func deleteVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
