@@ -208,4 +208,8 @@ extension WMSVehicleUser: WMSVehicleRepresentable, WMSVehicleRepresentable2 {
     }
 }
 
-//extension WMSVehicle2: WMSDSViewRelated
+extension VehicleRow {
+    func wmsVehicle2(req: DatabaseConnectable) -> Future<WMSVehicle2> {
+        return WMSVehicleUser.first(where: "Vehicle_id = \(try! requireID())", req: req).map{ $0! }.map{ $0.wmsVehicle2 }
+    }
+}

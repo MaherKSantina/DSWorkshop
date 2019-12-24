@@ -16,23 +16,33 @@ public class DSWMS {
         try! DSWorkshopMain().workshopConfigure(migrations: &migrations)
         migrations.add(migration: WMSVehicleUser.self, database: .mysql)
     }
-}
 
-extension DSWMS: WMSDelegate {
     public func getUsers(queryString: String, on: DatabaseConnectable) -> EventLoopFuture<[WMSUser]> {
         return WMSUserRow.all(where: "email LIKE '%\(queryString)%'", req: on).map{ $0.map(WMSUser.init) }
     }
 
-    public func updateVehicle(user: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return VehicleRow.update(value: user.workshopVehicleRow, req: on).map{ $0.wmsVehicle }
+    public func updateVehicle(vehicle: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
+        return VehicleRow.update(value: vehicle.workshopVehicleRow, req: on).map{ $0.wmsVehicle }
     }
 
-    public func createVehicle(user: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return VehicleRow.create(value: user.workshopVehicleRow, req: on).map{ $0.wmsVehicle }
+    public func updateVehicle2(vehicle: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle2> {
+        return VehicleRow.update(value: vehicle.workshopVehicleRow, req: on).flatMap{ $0.wmsVehicle2(req: on) }
+    }
+
+    public func createVehicle(vehicle: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
+        return VehicleRow.create(value: vehicle.workshopVehicleRow, req: on).map{ $0.wmsVehicle }
+    }
+
+    public func createVehicle2(vehicle: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle2> {
+        return VehicleRow.create(value: vehicle.workshopVehicleRow, req: on).flatMap{ $0.wmsVehicle2(req: on) }
     }
 
     public func getVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
         return VehicleRow.first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).map{ $0.wmsVehicle }
+    }
+
+    public func getVehicle2(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle2> {
+        return VehicleRow.first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).flatMap{ $0.wmsVehicle2(req: on) }
     }
 
     public func getAllVehicles(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle]> {
