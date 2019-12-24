@@ -9,7 +9,7 @@ import Foundation
 import DSCore
 import FluentMySQL
 
-public struct WMSUserRow: MySQLModel, DSModel {
+public struct WMSUserRow: DSModel {
     public var id: Int?
     public var email: String
 

@@ -7,7 +7,6 @@
 
 import Vapor
 import DSCore
-import DSWorkshop
 
 public protocol WMSDSViewRelated: DSView {
     associatedtype View: DSView
@@ -84,15 +83,15 @@ public struct WMSVehicle: Content {
 }
 
 public struct WMSVehicleUser {
-    public var Vehicle_id: Int
-    public var Vehicle_name: String
-    public var Vehicle_userID: Int
+    public var WMSVehicle_id: Int
+    public var WMSVehicle_name: String
+    public var WMSVehicle_userID: Int
     public var WMSUser_id: Int
     public var WMSUser_email: String
 }
 
 extension WMSVehicleUser: DSTwoModelView {
-    public typealias Model1 = VehicleRow
+    public typealias Model1 = WMSVehicleRow
     public typealias Model2 = WMSUserRow
 
     public static var entity: String {
@@ -118,7 +117,7 @@ extension WMSVehicleUser: DSTwoModelView {
 
     public var wmsVehicle2: WMSVehicle2 {
         let user = WMSUser(id: WMSUser_id, email: WMSUser_email)
-        return WMSVehicle2(id: Vehicle_id, name: Vehicle_name, user: user)
+        return WMSVehicle2(id: WMSVehicle_id, name: WMSVehicle_name, user: user)
     }
 }
 
@@ -196,20 +195,38 @@ extension WMSVehicleUser: WMSVehicleRepresentable, WMSVehicleRepresentable2 {
     }
 
     public var wmsVehicleId: Int {
-        return Vehicle_id
+        return WMSVehicle_id
     }
 
     public var wmsVehicleName: String {
-        return Vehicle_name
+        return WMSVehicle_name
     }
 
     public var wmsVehicleUserID: Int {
-        return Vehicle_userID
+        return WMSVehicle_userID
     }
 }
 
-extension VehicleRow {
+extension WMSVehicleRow {
     func wmsVehicle2(req: DatabaseConnectable) -> Future<WMSVehicle2> {
-        return WMSVehicleUser.first(where: "Vehicle_id = \(try! requireID())", req: req).map{ $0! }.map{ $0.wmsVehicle2 }
+        return WMSVehicleUser.first(where: "WMSVehicle_id = \(try! requireID())", req: req).map{ $0! }.map{ $0.wmsVehicle2 }
+    }
+}
+
+extension WMSVehicleRow {
+    var wmsVehicle: WMSVehicle {
+        return WMSVehicle(id: try! requireID(), name: name, userID: userID)
+    }
+}
+
+extension WMSCreateVehicleFormRepresentable {
+    var wmsVehicleRow: WMSVehicleRow {
+        return WMSVehicleRow(id: nil, name: vehicleCreateFormName, userID: vehicleCreateFormUserId)
+    }
+}
+
+extension WMSUpdateVehicleFormRepresentable {
+    var wmsVehicleRow: WMSVehicleRow {
+        return WMSVehicleRow(id: vehicleUpdateFormId, name: vehicleUpdateFormName, userID: vehicleUpdateFormUserId)
     }
 }

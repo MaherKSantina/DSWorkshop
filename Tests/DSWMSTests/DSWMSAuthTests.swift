@@ -2,7 +2,6 @@ import XCTest
 @testable import DSWMS
 import DSAuth
 import FluentMySQL
-import DSWorkshop
 
 struct UserLogin: WMSLoginFormRepresentable, WMSRegisterFromRepresentable {
 
@@ -189,14 +188,14 @@ final class DSWMSTests: WMSTestCase {
 
     func testGetAllVehicles_ShouldGetCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
+        let _ = try WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
         let vehicles = try sut.getAllVehicles(on: conn).wait()
         XCTAssertEqual(vehicles[0].name, "v1")
     }
 
     func testGetAllVehicles2_ShouldGetCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
+        let _ = try WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
         let vehicles = try sut.getAllVehicles2(on: conn).wait()
         XCTAssertEqual(vehicles[0].name, "v1")
         XCTAssertEqual(vehicles[0].user.email, "u2@gmail.com")
@@ -204,8 +203,8 @@ final class DSWMSTests: WMSTestCase {
 
     func testGetVehicleById_ShouldGetCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
-        let v2 = try VehicleRow(id: nil, name: "v2", userID: try! user1.requireID()).save(on: conn).wait()
+        let _ = try WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
+        let v2 = try WMSVehicleRow(id: nil, name: "v2", userID: try! user1.requireID()).save(on: conn).wait()
         let vehicle = try sut.getVehicle(id: try v2.requireID(), on: conn).wait()
         XCTAssertEqual(vehicle.name, "v2")
         XCTAssertEqual(vehicle.userID, 1)
@@ -213,8 +212,8 @@ final class DSWMSTests: WMSTestCase {
 
     func testGetVehicle2ById_ShouldGetCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let _ = try VehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
-        let v2 = try VehicleRow(id: nil, name: "v2", userID: try! user1.requireID()).save(on: conn).wait()
+        let _ = try WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
+        let v2 = try WMSVehicleRow(id: nil, name: "v2", userID: try! user1.requireID()).save(on: conn).wait()
         let vehicle = try sut.getVehicle2(id: try v2.requireID(), on: conn).wait()
         XCTAssertEqual(vehicle.name, "v2")
         XCTAssertEqual(vehicle.user.email, "u2@gmail.com")

@@ -65,15 +65,6 @@
         }
       },
       {
-        "package": "DSWorkshop",
-        "repositoryURL": "https://github.com/MaherKSantina/DSWorkshop.git",
-        "state": {
-          "branch": null,
-          "revision": "ac95d4786b35bf41fdd2608dd535f60efae54ff6",
-          "version": "0.2.4"
-        }
-      },
-      {
         "package": "Fluent",
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
