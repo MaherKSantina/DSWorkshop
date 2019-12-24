@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/MaherKSantina/DSAuth.git",
         "state": {
           "branch": null,
-          "revision": "2712cabb544c230db66bd1b662f195ee901d5995",
-          "version": "0.4.7"
+          "revision": "de68e0779020ee006b8b0fe83cb6a6c6f462f6b0",
+          "version": "0.4.8"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/MaherKSantina/DSCore.git",
         "state": {
           "branch": null,
-          "revision": "4744fb4829a0f215c64d8c5132ddb8b3c7fbbec0",
-          "version": "0.1.8"
+          "revision": "3c870e18301d648d6dd9c9066dfc71d866da62b7",
+          "version": "0.1.9"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/MaherKSantina/DSWorkshop.git",
         "state": {
           "branch": null,
-          "revision": "816c90e9e5bbbcfce206ec49463efdb0688bad0c",
-          "version": "0.2.3"
+          "revision": "ac95d4786b35bf41fdd2608dd535f60efae54ff6",
+          "version": "0.2.4"
         }
       },
       {

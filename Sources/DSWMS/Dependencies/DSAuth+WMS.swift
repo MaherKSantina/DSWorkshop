@@ -27,8 +27,8 @@ extension AccessDto {
 }
 
 extension DSAuthMain {
-    public static func registerAndLogin(user: UserRow.Register, on: DatabaseConnectable, container: Container) throws -> EventLoopFuture<AccessDto> {
-        return DSAuthMain.register(user: user, on: on, container: container).flatMap{ try DSAuthMain.login(user: .init(email: $0.User_email, password: $0.Login_password, organizationID: $0.Login_organizationID), on: container) }
+    public static func registerAndLogin(user: UserRow.Register, on: DatabaseConnectable) throws -> EventLoopFuture<AccessDto> {
+        return DSAuthMain.register(user: user, on: on).flatMap{ try DSAuthMain.login(user: .init(email: $0.User_email, password: $0.Login_password, organizationID: $0.Login_organizationID), on: on) }
     }
 }
 

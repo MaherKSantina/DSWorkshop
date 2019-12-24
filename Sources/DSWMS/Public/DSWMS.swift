@@ -65,11 +65,11 @@ extension DSWMS: WMSDelegate {
         return WMSUserRow.all(where: nil, req: on).map{ $0.map(WMSUser.init) }
     }
 
-    public func register(user: WMSRegisterFromRepresentable, on: DatabaseConnectable, container: Container) throws -> EventLoopFuture<WMSAccess> {
-        return try DSAuthMain.registerAndLogin(user: user.authRegisterPost, on: on, container: container).map{ $0.wmsAccess }
+    public func register(user: WMSRegisterFromRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSAccess> {
+        return try DSAuthMain.registerAndLogin(user: user.authRegisterPost, on: on).map{ $0.wmsAccess }
     }
 
-    public func login(user: WMSLoginFormRepresentable, on: Container) throws -> EventLoopFuture<WMSAccess> {
+    public func login(user: WMSLoginFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSAccess> {
         return try DSAuthMain.login(user: user.authLoginPost, on: on).map{ $0.wmsAccess }
     }
 }

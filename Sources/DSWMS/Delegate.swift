@@ -9,8 +9,8 @@ import Foundation
 import Vapor
 
 protocol WMSDelegate {
-    func register(user: WMSRegisterFromRepresentable, on: DatabaseConnectable, container: Container) throws -> EventLoopFuture<WMSAccess>
-    func login(user: WMSLoginFormRepresentable, on: Container) throws -> Future<WMSAccess>
+    func register(user: WMSRegisterFromRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSAccess>
+    func login(user: WMSLoginFormRepresentable, on: DatabaseConnectable) throws -> Future<WMSAccess>
     func getAllUsers(on: DatabaseConnectable) -> Future<[WMSUser]>
     func getUsers(queryString: String, on: DatabaseConnectable) -> Future<[WMSUser]>
     func getUser(id: Int, on: DatabaseConnectable) throws -> Future<WMSUser>

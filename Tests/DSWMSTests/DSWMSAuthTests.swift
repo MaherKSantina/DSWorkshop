@@ -85,12 +85,12 @@ final class DSWMSTests: WMSTestCase {
 
     func testLogin_ExistingUser_ShouldLoginProperly() throws {
         try addLogin()
-        let _ = try sut.login(user: UserLogin(email: "user1@gmail.com", password: "asdfgh"), on: app).wait()
+        let _ = try sut.login(user: UserLogin(email: "user1@gmail.com", password: "asdfgh"), on: conn).wait()
     }
 
     func testLogin_UserDoesntExist_ShouldShowError() throws {
         do {
-            let _ = try sut.login(user: UserLogin(email: "user1@gmail.com", password: "asdfgh"), on: app).wait()
+            let _ = try sut.login(user: UserLogin(email: "user1@gmail.com", password: "asdfgh"), on: conn).wait()
             XCTFail()
         }
         catch {
@@ -100,15 +100,15 @@ final class DSWMSTests: WMSTestCase {
     }
 
     func testRegister_NewUser_ShouldRegisterProperly() throws {
-        let _ = try sut.register(user: UserLogin(email: "maher.santina90@gmail.com", password: "123456"), on: conn, container: app).wait()
-        let _ = try sut.login(user: UserLogin(email: "maher.santina90@gmail.com", password: "123456"), on: app).wait()
+        let _ = try sut.register(user: UserLogin(email: "maher.santina90@gmail.com", password: "123456"), on: conn).wait()
+        let _ = try sut.login(user: UserLogin(email: "maher.santina90@gmail.com", password: "123456"), on: conn).wait()
     }
 
     func testRegister_ExistingUser_NewLogin_ShouldRegisterProperly() throws {
         let org = try OrganizationRow(id: nil, name: "Org 1").save(on: conn).wait()
         let _ = try UserRow(id: nil, email: "maher.santina90@gmail.com").save(on: conn).wait()
         let newUser = UserRow.Register(email: "maher.santina90@gmail.com", password: "123123", organizationID: try org.requireID())
-        let _ = try DSAuthMain.register(user: newUser, on: conn, container: app).wait()
+        let _ = try DSAuthMain.register(user: newUser, on: conn).wait()
         let users = try UserRow.query(on: conn).all().wait()
         XCTAssertEqual(users.count, 1)
         let logins = try LoginRow.query(on: conn).all().wait()
@@ -122,7 +122,7 @@ final class DSWMSTests: WMSTestCase {
         let _ = try LoginRow(id: nil, userID: try user.requireID(), password: "123123", organizationID: try org.requireID(), roleID: 1).save(on: conn).wait()
 
         let newUser = UserRow.Register(email: "maher.santina90@gmail.com", password: "123123", organizationID: try org.requireID())
-        let _ = try DSAuthMain.register(user: newUser, on: conn, container: app).wait()
+        let _ = try DSAuthMain.register(user: newUser, on: conn).wait()
         }
         catch {
             let e = error as! MySQLError
