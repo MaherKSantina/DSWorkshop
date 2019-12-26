@@ -145,6 +145,10 @@ extension DSWMS {
         return WMSVehicleRow.create(value: vehicle.wmsVehicleRow, req: on).map{ $0.wmsVehicle }
     }
 
+    public func deleteVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
+        return WMSVehicleRow.first(where: "id = \(id)", req: on).flatMap{ $0?.delete(on: on) ?? on.future(()) }
+    }
+
     public func createVehicle2(vehicle: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle2> {
         return WMSVehicleRow.create(value: vehicle.wmsVehicleRow, req: on).flatMap{ $0.wmsVehicle2(req: on) }
     }
