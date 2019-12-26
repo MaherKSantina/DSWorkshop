@@ -8,10 +8,6 @@
 import Vapor
 import DSCore
 
-public protocol WMSDSViewRelated: DSView {
-    associatedtype View: DSView
-}
-
 public struct WMSAuthUser: Content {
     public var id: Int
     public var email: String
@@ -36,18 +32,6 @@ public struct WMSAccess: Content {
     public var token: String
 }
 
-public protocol WMSVehicleRepresentable: WMSVehicleConvertible {
-    var wmsVehicleId: Int { get }
-    var wmsVehicleName: String { get }
-    var wmsVehicleUserID: Int { get }
-}
-
-extension WMSVehicleRepresentable {
-    public var wmsVehicle: WMSVehicle {
-        return WMSVehicle(id: wmsVehicleId, name: wmsVehicleName, userID: wmsVehicleUserID)
-    }
-}
-
 public protocol WMSUserConvertible {
     var wmsUser: WMSUser { get }
 }
@@ -60,25 +44,6 @@ public protocol WMSUserRepresentable: WMSUserConvertible {
 extension WMSUserRepresentable {
     public var wmsUser: WMSUser {
         return WMSUser(id: wmsUserId, email: wmsUserEmail)
-    }
-}
-
-public protocol WMSVehicleRepresentable2: WMSVehicleConvertible2 {
-    var wmsVehicleId: Int { get }
-    var wmsVehicleName: String { get }
-    var wmsVehicleUser: WMSUserRepresentable { get }
-}
-
-public struct WMSVehicle: Content {
-
-    public var id: Int
-    public var name: String
-    public var userID: Int
-
-    public init(id: Int, name: String, userID: Int) {
-        self.id = id
-        self.name = name
-        self.userID = userID
     }
 }
 
@@ -121,64 +86,6 @@ extension WMSVehicleUser: DSTwoModelView {
     }
 }
 
-public struct WMSVehicle2: Content {
-    public var id: Int
-    public var name: String
-    public var user: WMSUser
-}
-
-extension WMSVehicle2: WMSVehicleRepresentable {
-    public var wmsVehicleId: Int {
-        return id
-    }
-
-    public var wmsVehicleName: String {
-        return name
-    }
-
-    public var wmsVehicleUserID: Int {
-        return user.id
-    }
-}
-
-extension WMSVehicleRepresentable2 {
-    public var wmsVehicle2: WMSVehicle2 {
-        return WMSVehicle2(id: wmsVehicleId, name: wmsVehicleName, user: wmsVehicleUser.wmsUser)
-    }
-}
-
-public protocol WMSVehicleConvertible {
-    var wmsVehicle: WMSVehicle { get }
-}
-
-extension WMSVehicle: WMSVehicleConvertible {
-    public var wmsVehicle: WMSVehicle {
-        return self
-    }
-}
-
-public protocol WMSVehicleConvertible2 {
-    var wmsVehicle2: WMSVehicle2 { get }
-}
-
-extension WMSVehicle2: WMSVehicleConvertible2 {
-    public var wmsVehicle2: WMSVehicle2 {
-        return self
-    }
-}
-
-extension Future where T: WMSVehicleConvertible {
-    public var wmsVehicle: Future<WMSVehicle> {
-        return self.map{ $0.wmsVehicle }
-    }
-}
-
-extension Future where T: WMSVehicleConvertible2 {
-    public var wmsVehicle2: Future<WMSVehicle2> {
-        return self.map{ $0.wmsVehicle2 }
-    }
-}
-
 extension WMSVehicleUser: WMSUserRepresentable {
     public var wmsUserId: Int {
         return WMSUser_id
@@ -204,29 +111,5 @@ extension WMSVehicleUser: WMSVehicleRepresentable, WMSVehicleRepresentable2 {
 
     public var wmsVehicleUserID: Int {
         return WMSVehicle_userID
-    }
-}
-
-extension WMSVehicleRow {
-    func wmsVehicle2(req: DatabaseConnectable) -> Future<WMSVehicle2> {
-        return WMSVehicleUser.first(where: "WMSVehicle_id = \(try! requireID())", req: req).map{ $0! }.map{ $0.wmsVehicle2 }
-    }
-}
-
-extension WMSVehicleRow {
-    var wmsVehicle: WMSVehicle {
-        return WMSVehicle(id: try! requireID(), name: name, userID: userID)
-    }
-}
-
-extension WMSCreateVehicleFormRepresentable {
-    var wmsVehicleRow: WMSVehicleRow {
-        return WMSVehicleRow(id: nil, name: vehicleCreateFormName, userID: vehicleCreateFormUserId)
-    }
-}
-
-extension WMSUpdateVehicleFormRepresentable {
-    var wmsVehicleRow: WMSVehicleRow {
-        return WMSVehicleRow(id: vehicleUpdateFormId, name: vehicleUpdateFormName, userID: vehicleUpdateFormUserId)
     }
 }

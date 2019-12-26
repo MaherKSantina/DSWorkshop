@@ -26,24 +26,3 @@ public protocol WMSUpdateUserFormRepresentable {
     var userUpdateFormId: Int { get }
     var userUpdateFormEmail: String { get }
 }
-
-public protocol WMSWorkOrderRepresentable {
-    var workOrderId: Int { get }
-    var workOrderName: String { get }
-}
-
-public protocol WMSJobRepresentable {
-    var workOrderId: Int { get }
-    var workOrderJame: String { get }
-}
-
-public protocol WMSCreateVehicleFormRepresentable {
-    var vehicleCreateFormName: String { get }
-    var vehicleCreateFormUserId: Int { get }
-}
-
-public protocol WMSUpdateVehicleFormRepresentable {
-    var vehicleUpdateFormId: Int { get }
-    var vehicleUpdateFormName: String { get }
-    var vehicleUpdateFormUserId: Int { get }
-}
