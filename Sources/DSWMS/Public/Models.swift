@@ -98,7 +98,7 @@ extension WMSVehicleUser: DSTwoModelView {
         return tableName
     }
 
-    public static var join: JoinRelationship {
+    public static var join: DSJoinRelationship {
         return .init(type: .inner, key1: "userID", key2: "id")
     }
     public static var model1selectFields: [String] {

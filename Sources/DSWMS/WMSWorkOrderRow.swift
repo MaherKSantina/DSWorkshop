@@ -15,18 +15,21 @@ public struct WMSWorkOrderRow {
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case id
         case jobID
+        case vehicleID
         case notes
         case date
     }
 
     public var id: Int?
+    public var vehicleID: WMSVehicleRow.ID
     public var jobID: WMSJobRow.ID
     public var notes: String?
     public var date: Date
 
-    public init(id: Int? = nil, jobID: WMSJobRow.ID, notes: String?, date: Date) {
+    public init(id: Int? = nil, jobID: WMSJobRow.ID, vehicleID: WMSVehicleRow.ID, notes: String?, date: Date) {
         self.id = id
         self.jobID = jobID
+        self.vehicleID = vehicleID
         self.notes = notes
         self.date = date
     }
