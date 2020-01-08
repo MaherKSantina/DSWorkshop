@@ -18,11 +18,11 @@ public protocol WMSRegisterFromRepresentable {
     var registerPassword: String { get }
 }
 
-public protocol WMSCreateUserFormRepresentable {
+public protocol WMSCreateUserFormRepresentable: RowConvertible {
     var userCreateFormEmail: String { get }
 }
 
-public protocol WMSUpdateUserFormRepresentable {
+public protocol WMSUpdateUserFormRepresentable: RowConvertible {
     var userUpdateFormId: Int { get }
     var userUpdateFormEmail: String { get }
 }

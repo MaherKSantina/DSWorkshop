@@ -13,38 +13,8 @@ public struct WMSAuthUser: Content {
     public var email: String
 }
 
-public struct WMSUser: Content {
-    public var id: Int
-    public var email: String
-
-    init(userRow: WMSUserRow) {
-        self.id = try! userRow.requireID()
-        self.email = userRow.email
-    }
-
-    init(id: Int, email: String) {
-        self.id = id
-        self.email = email
-    }
-}
-
 public struct WMSAccess: Content {
     public var token: String
-}
-
-public protocol WMSUserConvertible {
-    var wmsUser: WMSUser { get }
-}
-
-public protocol WMSUserRepresentable: WMSUserConvertible {
-    var wmsUserId: Int { get }
-    var wmsUserEmail: String { get }
-}
-
-extension WMSUserRepresentable {
-    public var wmsUser: WMSUser {
-        return WMSUser(id: wmsUserId, email: wmsUserEmail)
-    }
 }
 
 public struct WMSVehicleUser {

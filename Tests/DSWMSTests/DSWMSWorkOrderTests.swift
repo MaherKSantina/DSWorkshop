@@ -48,7 +48,7 @@ final class DSWMSWorkOrderTests: WMSTestCase {
     }
 
     func testCreateWorkOrder_ShouldCreateCorrectly() throws {
-        let row = try WMSWorkOrderRow(id: nil, jobID: 2, vehicleID: 1, notes: "notes1", date: Date()).save(on: conn).wait()
+        let row = WMSWorkOrderRow(id: nil, jobID: 2, vehicleID: 1, notes: "notes1", date: Date())
         let _ = try sut.createWorkOrder(workOrder: row, on: conn).wait()
         let workOrders = try sut.getAllWorkOrders(on: conn).wait()
         XCTAssertEqual(workOrders[0].jobID, 2)
