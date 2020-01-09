@@ -58,12 +58,6 @@ extension Future where T: WMSVehicleConvertible {
     }
 }
 
-public struct WMSVehicle: Content {
-    public var id: Int
-    public var name: String
-    public var userID: Int
-}
-
 public protocol WMSVehicleConvertible2: WMSVehicleConvertible {
     var wmsVehicle2: WMSVehicle2 { get }
 }

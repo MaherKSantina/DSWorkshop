@@ -29,6 +29,24 @@ public struct WMSVehicleRow {
     }
 }
 
+public struct WMSVehicle: Content {
+    public var id: Int
+    public var name: String
+    public var userID: Int
+
+    struct Post: Content, EntityPost, EntityRelated {
+        var entity: WMSVehicleRow {
+            return WMSVehicleRow(id: nil, name: name, userID: userID)
+        }
+
+        typealias EntityType = WMSVehicleRow
+
+        public var name: String
+        public var userID: Int
+    }
+}
+
+
 extension WMSVehicleRow: DSModel {
     public static var entity: String = "WMSVehicle"
 }
@@ -68,6 +86,6 @@ extension WMSVehicle: EntityRelated {
 
 }
 
-extension WMSVehicle: EntityPost, EntityPut, EntityDelete {
+extension WMSVehicle: EntityPut, EntityDelete {
     
 }

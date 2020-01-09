@@ -26,6 +26,32 @@ public struct WMSJobRow {
     }
 }
 
+public struct WMSJob: Content {
+
+    struct Post: EntityPost, EntityRelated {
+        typealias EntityType = WMSJobRow
+
+        var entity: WMSJobRow {
+            return WMSJobRow(id: nil, name: name)
+        }
+
+        public var name: String
+    }
+
+    public var id: Int
+    public var name: String
+
+    init(jobRow: WMSJobRow) {
+        self.id = try! jobRow.requireID()
+        self.name = jobRow.name
+    }
+
+    init(id: Int, name: String) {
+        self.id = id
+        self.name = name
+    }
+}
+
 extension WMSJobRow: DSModel {
     public static var entity: String = "WMSJob"
 }
@@ -40,3 +66,32 @@ extension WMSJobRow: Hashable {
         hasher.combine(id)
     }
 }
+
+extension WMSJobRow: EntityControllable {
+    var `public`: WMSJob {
+        return WMSJob(id: try! requireID(), name: name)
+    }
+
+    init(id: Int) {
+        self.id = id
+        self.name = ""
+    }
+
+    typealias Public = WMSJob
+}
+
+extension WMSJobRow: EntityQueryable {
+    static func whereString(queryString: String) -> String {
+        return "name LIKE '%\(queryString)%'"
+    }
+}
+
+extension WMSJob: EntityRelated {
+    var entity: WMSJobRow {
+        return WMSJobRow(id: id, name: name)
+    }
+
+    typealias EntityType = WMSJobRow
+}
+
+extension WMSJob: EntityPost, EntityPut, EntityDelete {  }

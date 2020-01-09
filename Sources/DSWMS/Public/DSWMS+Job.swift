@@ -55,49 +55,8 @@ extension Future where T: WMSJobConvertible {
     }
 }
 
-public struct WMSJob: Content {
-    public var id: Int
-    public var name: String
-
-    init(jobRow: WMSJobRow) {
-        self.id = try! jobRow.requireID()
-        self.name = jobRow.name
-    }
-
-    init(id: Int, name: String) {
-        self.id = id
-        self.name = name
-    }
-}
-
 extension Int {
     var wmsJobRow: WMSJobRow {
         return WMSJobRow(id: self, name: "")
-    }
-}
-
-extension DSWMS {
-    public func deleteJob(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
-        return WMSJobRow.delete(value: id.wmsJobRow, req: on)
-    }
-
-    public func updateJob(job: WMSUpdateJobFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSJob> {
-        return WMSJobRow.update(value: job.wmsJobRow, req: on).map(WMSJob.init)
-    }
-
-    public func createJob(job: WMSCreateJobFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSJob> {
-        return WMSJobRow.create(value: job.wmsJobRow, req: on).map(WMSJob.init)
-    }
-
-    public func getJob(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSJob> {
-        return WMSJobRow.first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).map(WMSJob.init)
-    }
-
-    public func getAllJobs(on: DatabaseConnectable) -> EventLoopFuture<[WMSJob]> {
-        return WMSJobRow.all(where: nil, req: on).map{ $0.map(WMSJob.init) }
-    }
-
-    public func getJobs(queryString: String, on: DatabaseConnectable) -> EventLoopFuture<[WMSJob]> {
-        return WMSJobRow.all(where: "name LIKE '%\(queryString)%'", req: on).map{ $0.map(WMSJob.init) }
     }
 }
