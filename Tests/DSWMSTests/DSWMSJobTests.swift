@@ -3,23 +3,6 @@ import XCTest
 import DSAuth
 import FluentMySQL
 
-struct JobForm: WMSCreateJobFormRepresentable, WMSUpdateJobFormRepresentable {
-    var jobCreateFormName: String {
-        return name
-    }
-
-    var jobUpdateFormId: Int {
-        return id!
-    }
-
-    var jobUpdateFormName: String {
-        return name
-    }
-
-    var id: Int?
-    var name: String
-}
-
 final class DSWMSJobTests: WMSTestCase {
 
     var sut: DSWMS!

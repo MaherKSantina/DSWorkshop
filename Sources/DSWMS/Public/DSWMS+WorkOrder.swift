@@ -44,30 +44,6 @@ extension Future where T: WMSWorkOrderConvertible {
     }
 }
 
-public struct WMSWorkOrder: Content {
-    public enum CodingKeys: String, CodingKey, CaseIterable {
-        case id
-        case jobID
-        case vehicleID
-        case notes
-        case date
-    }
-
-    public var id: Int
-    public var vehicleID: WMSVehicleRow.ID
-    public var jobID: WMSJobRow.ID
-    public var notes: String?
-    public var date: Date
-
-    public init(id: Int, jobID: WMSJobRow.ID, vehicleID: WMSVehicleRow.ID, notes: String? = nil, date: Date) {
-        self.id = id
-        self.jobID = jobID
-        self.vehicleID = vehicleID
-        self.notes = notes
-        self.date = date
-    }
-}
-
 extension WMSWorkOrderRow: WMSWorkOrderRepresentable {
     public var wmsWorkOrderId: Int {
         return try! requireID()
