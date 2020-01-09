@@ -41,7 +41,7 @@ final class DSWMSVehicleTests: WMSTestCase {
     func testGetAllVehicles_ShouldGetCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
         let _ = try WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
-        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        let vehicles = try WMSVehicle.getAll(on: conn).wait()
         XCTAssertEqual(vehicles[0].name, "v1")
     }
 
@@ -57,7 +57,7 @@ final class DSWMSVehicleTests: WMSTestCase {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
         let _ = try WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
         let v2 = try WMSVehicleRow(id: nil, name: "v2", userID: try! user1.requireID()).save(on: conn).wait()
-        let vehicle = try sut.getVehicle(id: try v2.requireID(), on: conn).wait()
+        let vehicle = try WMSVehicle.get(id: try v2.requireID(), on: conn).wait()
         XCTAssertEqual(vehicle.name, "v2")
         XCTAssertEqual(vehicle.userID, 1)
     }
@@ -73,9 +73,9 @@ final class DSWMSVehicleTests: WMSTestCase {
 
     func testCreateVehicle_ShouldCreateCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let form = VehicleForm(id: nil, name: "v1", userID: try! user1.requireID())
-        let _ = try sut.createVehicle(vehicle: form, on: conn).wait()
-        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        let form = WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID())
+        let _ = try form.create(on: conn).wait()
+        let vehicles = try WMSVehicleRow.getAll(on: conn).wait()
         XCTAssertEqual(vehicles[0].name, "v1")
         XCTAssertEqual(vehicles[0].userID, 1)
     }
@@ -91,19 +91,19 @@ final class DSWMSVehicleTests: WMSTestCase {
 
     func testUpdateVehicle_ShouldCreateCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let form = VehicleForm(id: nil, name: "v1", userID: try! user1.requireID())
-        let newVehicle = try sut.createVehicle(vehicle: form, on: conn).wait()
-        let update = VehicleForm(id: newVehicle.id, name: "v2", userID: try! user1.requireID())
-        let _ = try sut.updateVehicle(vehicle: update, on: conn).wait()
-        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        let form = WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID())
+        let newVehicle = try form.create(on: conn).wait()
+        let update = WMSVehicleRow(id: newVehicle.id, name: "v2", userID: try! user1.requireID())
+        let _ = try update.update(on: conn).wait()
+        let vehicles = try WMSVehicleRow.getAll(on: conn).wait()
         XCTAssertEqual(vehicles[0].name, "v2")
         XCTAssertEqual(vehicles[0].userID, 1)
     }
 
     func testUpdateVehicle2_ShouldCreateCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let form = VehicleForm(id: nil, name: "v1", userID: try! user1.requireID())
-        let newVehicle = try sut.createVehicle(vehicle: form, on: conn).wait()
+        let form = WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID())
+        let newVehicle = try form.create(on: conn).wait()
         let update = VehicleForm(id: newVehicle.id, name: "v2", userID: try! user1.requireID())
         let _ = try sut.updateVehicle2(vehicle: update, on: conn).wait()
         let vehicles = try sut.getAllVehicles2(on: conn).wait()
@@ -113,10 +113,10 @@ final class DSWMSVehicleTests: WMSTestCase {
 
     func testDeleteVehicle_ShouldDeleteCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let form = VehicleForm(id: nil, name: "v1", userID: try! user1.requireID())
-        let newVehicle = try sut.createVehicle(vehicle: form, on: conn).wait()
-        let _ = try sut.deleteVehicle(id: newVehicle.id, on: conn).wait()
-        let vehicles = try sut.getAllVehicles(on: conn).wait()
+        let form = WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID())
+        let newVehicle = try form.create(on: conn).wait()
+        let _ = try newVehicle.delete(on: conn).wait()
+        let vehicles = try WMSVehicleRow.getAll(on: conn).wait()
         XCTAssertEqual(vehicles.count, 0)
     }
 }

@@ -79,6 +79,10 @@ extension EntityRelated {
     static func getAll(on: DatabaseConnectable) -> EventLoopFuture<[EntityType.Public]> {
         return EntityType.getAll(on: on)
     }
+    
+    static func get(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<EntityType.Public> {
+        return try EntityType.get(id: id, on: on)
+    }
 }
 
 extension EntityRelated where EntityType: EntityQueryable {

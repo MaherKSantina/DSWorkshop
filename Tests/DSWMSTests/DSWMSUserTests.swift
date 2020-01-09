@@ -23,7 +23,7 @@ final class DSWMSUserTests: WMSTestCase {
     func testGetUserById_ShouldGetCorrectly() throws {
         let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
         let user2 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
-        let user = try WMSUserRow.get(id: try user2.requireID(), on: conn).wait()
+        let user = try WMSUser.get(id: try user2.requireID(), on: conn).wait()
         XCTAssertEqual(user.email, "u2@gmail.com")
     }
 

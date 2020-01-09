@@ -133,36 +133,16 @@ extension WMSVehicleRow {
 
 extension DSWMS {
 
-    public func updateVehicle(vehicle: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return WMSVehicleRow.update(value: vehicle.wmsVehicleRow, req: on).map{ $0.wmsVehicle }
-    }
-
     public func updateVehicle2(vehicle: WMSUpdateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle2> {
         return WMSVehicleRow.update(value: vehicle.wmsVehicleRow, req: on).flatMap{ $0.wmsVehicle2(req: on) }
-    }
-
-    public func createVehicle(vehicle: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return WMSVehicleRow.create(value: vehicle.wmsVehicleRow, req: on).map{ $0.wmsVehicle }
-    }
-
-    public func deleteVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
-        return WMSVehicleRow.first(where: "id = \(id)", req: on).flatMap{ $0?.delete(on: on) ?? on.future(()) }
     }
 
     public func createVehicle2(vehicle: WMSCreateVehicleFormRepresentable, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle2> {
         return WMSVehicleRow.create(value: vehicle.wmsVehicleRow, req: on).flatMap{ $0.wmsVehicle2(req: on) }
     }
 
-    public func getVehicle(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle> {
-        return WMSVehicleRow.first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).map{ $0.wmsVehicle }
-    }
-
     public func getVehicle2(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<WMSVehicle2> {
         return WMSVehicleRow.first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).flatMap{ $0.wmsVehicle2(req: on) }
-    }
-
-    public func getAllVehicles(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle]> {
-        return getAll(type: WMSVehicleRow.self, on: on).map{ $0.map{ $0.wmsVehicle } }
     }
 
     public func getAllVehicles2(on: DatabaseConnectable) -> EventLoopFuture<[WMSVehicle2]> {

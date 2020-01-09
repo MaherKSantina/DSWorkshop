@@ -43,3 +43,31 @@ extension WMSVehicleRow: Hashable {
         hasher.combine(id)
     }
 }
+
+extension WMSVehicleRow: EntityControllable {
+    var `public`: WMSVehicle {
+        return WMSVehicle(id: try! requireID(), name: name, userID: userID)
+    }
+
+    init(id: Int) {
+        self.id = id
+        self.name = ""
+        self.userID = -1
+    }
+
+    typealias Public = WMSVehicle
+}
+
+extension WMSVehicle: EntityRelated {
+    var entity: WMSVehicleRow {
+        return WMSVehicleRow(id: id, name: name, userID: userID)
+    }
+
+    typealias EntityType = WMSVehicleRow
+
+
+}
+
+extension WMSVehicle: EntityPost, EntityPut, EntityDelete {
+    
+}
