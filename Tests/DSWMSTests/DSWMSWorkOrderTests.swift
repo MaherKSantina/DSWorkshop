@@ -34,23 +34,23 @@ final class DSWMSWorkOrderTests: WMSTestCase {
 
     func testGetAllWorkOrders_ShouldGetCorrectly() throws {
         let _ = try WMSWorkOrderRow(id: nil, jobID: job1.id!, vehicleID: vehicle1.id!, notes: "asd", date: Date()).save(on: conn).wait()
-        let all = try sut.getAllWorkOrders(on: conn).wait()
+        let all = try WMSWorkOrder.getAll(on: conn).wait()
         XCTAssertEqual(all.count, 1)
     }
 
     func testGetWorkOrderById_ShouldGetCorrectly() throws {
         let _ = try WMSWorkOrderRow(id: nil, jobID: job1.id!, vehicleID: vehicle1.id!, notes: "asd", date: Date()).save(on: conn).wait()
         let _ = try WMSWorkOrderRow(id: nil, jobID: job2.id!, vehicleID: vehicle3.id!, notes: "note2", date: Date()).save(on: conn).wait()
-        let one = try sut.getWorkOrder(id: 2, on: conn).wait()
+        let one = try WMSWorkOrder.get(id: 2, on: conn).wait()
         XCTAssertEqual(one.jobID, 2)
         XCTAssertEqual(one.vehicleID, 3)
         XCTAssertEqual(one.notes, "note2")
     }
 
     func testCreateWorkOrder_ShouldCreateCorrectly() throws {
-        let row = WMSWorkOrderRow(id: nil, jobID: 2, vehicleID: 1, notes: "notes1", date: Date())
-        let _ = try sut.createWorkOrder(workOrder: row, on: conn).wait()
-        let workOrders = try sut.getAllWorkOrders(on: conn).wait()
+        let row = WMSWorkOrder.Post(id: nil, jobID: 2, vehicleID: 1, notes: "notes1", date: Date())
+        let _ = try row.create(on: conn).wait()
+        let workOrders = try WMSWorkOrderRow.getAll(on: conn).wait()
         XCTAssertEqual(workOrders[0].jobID, 2)
         XCTAssertEqual(workOrders[0].vehicleID, 1)
         XCTAssertEqual(workOrders[0].notes, "notes1")
@@ -58,10 +58,9 @@ final class DSWMSWorkOrderTests: WMSTestCase {
 
     func testUpdateUser_ShouldCreateCorrectly() throws {
         let row = try WMSWorkOrderRow(id: nil, jobID: 2, vehicleID: 1, notes: "notes1", date: Date()).save(on: conn).wait()
-        let _ = try sut.createWorkOrder(workOrder: row, on: conn).wait()
-        let update = WMSWorkOrderRow(id: 1, jobID: 1, vehicleID: 2, notes: "notes1", date: Date())
-        let _ = try sut.updateWorkOrder(workOrder: update, on: conn).wait()
-        let workOrders = try sut.getAllWorkOrders(on: conn).wait()
+        let update = WMSWorkOrder(id: try! row.requireID(), jobID: 1, vehicleID: 2, notes: "notes1", date: Date())
+        let _ = try update.update(on: conn).wait()
+        let workOrders = try WMSWorkOrderRow.getAll(on: conn).wait()
         XCTAssertEqual(workOrders[0].jobID, 1)
         XCTAssertEqual(workOrders[0].vehicleID, 2)
         XCTAssertEqual(workOrders[0].notes, "notes1")
@@ -69,8 +68,9 @@ final class DSWMSWorkOrderTests: WMSTestCase {
 
     func testDeleteUser_ShouldDeleteCorrectly() throws {
         let row = try WMSWorkOrderRow(id: nil, jobID: 2, vehicleID: 1, notes: "notes1", date: Date()).save(on: conn).wait()
-        let _ = try sut.deleteWorkOrder(id: row.id!, on: conn).wait()
-        let users = try sut.getAllWorkOrders(on: conn).wait()
+        let delete = WMSWorkOrderRow(id: try! row.requireID())
+        let _ = try delete.delete(on: conn).wait()
+        let users = try WMSWorkOrder.getAll(on: conn).wait()
         XCTAssertEqual(users.count, 0)
     }
 }
