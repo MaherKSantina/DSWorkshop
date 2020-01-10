@@ -51,11 +51,11 @@ extension WMSWorkOrderRow: Hashable {
 }
 
 extension WMSWorkOrderRow: EntityControllable {
-    var `public`: WMSWorkOrder {
+    public var `public`: WMSWorkOrder {
         return WMSWorkOrder(id: try! requireID(), jobID: jobID, vehicleID: vehicleID, notes: notes, date: date)
     }
 
-    init(id: Int) {
+    public init(id: Int) {
         self.id = id
         self.vehicleID = 0
         self.jobID = 0
@@ -63,7 +63,7 @@ extension WMSWorkOrderRow: EntityControllable {
         self.date = Date()
     }
 
-    typealias Public = WMSWorkOrder
+    public typealias Public = WMSWorkOrder
 }
 
 public struct WMSWorkOrder: Content, EntityPut {
@@ -105,9 +105,9 @@ public struct WMSWorkOrder: Content, EntityPut {
 }
 
 extension WMSWorkOrder: EntityRelated {
-    var entity: WMSWorkOrderRow {
+    public var entity: WMSWorkOrderRow {
         return WMSWorkOrderRow(id: id, jobID: jobID, vehicleID: vehicleID, notes: notes, date: date)
     }
 
-    typealias EntityType = WMSWorkOrderRow
+    public typealias EntityType = WMSWorkOrderRow
 }

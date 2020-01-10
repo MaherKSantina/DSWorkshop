@@ -68,30 +68,30 @@ extension WMSJobRow: Hashable {
 }
 
 extension WMSJobRow: EntityControllable {
-    var `public`: WMSJob {
+    public var `public`: WMSJob {
         return WMSJob(id: try! requireID(), name: name)
     }
 
-    init(id: Int) {
+    public init(id: Int) {
         self.id = id
         self.name = ""
     }
 
-    typealias Public = WMSJob
+    public typealias Public = WMSJob
 }
 
 extension WMSJobRow: EntityQueryable {
-    static func whereString(queryString: String) -> String {
+    public static func whereString(queryString: String) -> String {
         return "name LIKE '%\(queryString)%'"
     }
 }
 
 extension WMSJob: EntityRelated {
-    var entity: WMSJobRow {
+    public var entity: WMSJobRow {
         return WMSJobRow(id: id, name: name)
     }
 
-    typealias EntityType = WMSJobRow
+    public typealias EntityType = WMSJobRow
 }
 
 extension WMSJob: EntityPost, EntityPut, EntityDelete {  }

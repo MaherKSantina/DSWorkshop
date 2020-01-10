@@ -63,25 +63,25 @@ extension WMSVehicleRow: Hashable {
 }
 
 extension WMSVehicleRow: EntityControllable {
-    var `public`: WMSVehicle {
+    public var `public`: WMSVehicle {
         return WMSVehicle(id: try! requireID(), name: name, userID: userID)
     }
 
-    init(id: Int) {
+    public init(id: Int) {
         self.id = id
         self.name = ""
         self.userID = -1
     }
 
-    typealias Public = WMSVehicle
+    public typealias Public = WMSVehicle
 }
 
 extension WMSVehicle: EntityRelated {
-    var entity: WMSVehicleRow {
+    public var entity: WMSVehicleRow {
         return WMSVehicleRow(id: id, name: name, userID: userID)
     }
 
-    typealias EntityType = WMSVehicleRow
+    public typealias EntityType = WMSVehicleRow
 
 
 }
@@ -125,16 +125,16 @@ extension WMSVehicleUserRow: DSTwoModelView {
 }
 
 extension WMSVehicleUserRow: EntityControllable {
-    var `public`: WMSVehicle2 {
+    public var `public`: WMSVehicle2 {
         let user = WMSUser(id: WMSUser_id, email: WMSUser_email)
         return WMSVehicle2(id: WMSVehicle_id, name: WMSVehicle_name, user: user)
     }
 
-    static var primaryKeyString: String {
+    public static var primaryKeyString: String {
         return "WMSVehicle_id"
     }
 
-    init(id: Int) {
+    public init(id: Int) {
         self.WMSVehicle_id = id
         self.WMSVehicle_name = ""
         self.WMSVehicle_userID = 0
@@ -142,7 +142,7 @@ extension WMSVehicleUserRow: EntityControllable {
         self.WMSUser_email = ""
     }
 
-    typealias Public = WMSVehicle2
+    public typealias Public = WMSVehicle2
 
     public var id: Int? {
         get {
@@ -165,9 +165,9 @@ public struct WMSVehicle2: Content {
 }
 
 extension WMSVehicle2: EntityRelated {
-    var entity: WMSVehicleUserRow {
+    public var entity: WMSVehicleUserRow {
         return WMSVehicleUserRow(WMSVehicle_id: id, WMSVehicle_name: name, WMSVehicle_userID: user.id, WMSUser_id: user.id, WMSUser_email: user.email)
     }
 
-    typealias EntityType = WMSVehicleUserRow
+    public typealias EntityType = WMSVehicleUserRow
 }

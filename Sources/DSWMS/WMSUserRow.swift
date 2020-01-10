@@ -74,31 +74,31 @@ public struct WMSUser: Content {
 }
 
 extension WMSUser: EntityRelated {
-    typealias EntityType = WMSUserRow
-    var entity: WMSUserRow {
+    public typealias EntityType = WMSUserRow
+    public var entity: WMSUserRow {
         return WMSUserRow(id: id, email: email)
     }
 }
 
 extension WMSUser.Post: EntityRelated, EntityPost {
-    typealias EntityType = WMSUserRow
+    public typealias EntityType = WMSUserRow
 
-    var entity: WMSUserRow {
+    public var entity: WMSUserRow {
         return WMSUserRow(id: nil, email: email)
     }
 }
 
 extension WMSUser.Put: EntityRelated, EntityPut {
-    typealias EntityType = WMSUserRow
+    public typealias EntityType = WMSUserRow
 
-    var entity: WMSUserRow {
+    public var entity: WMSUserRow {
         return WMSUserRow(id: id, email: email)
     }
 }
 extension WMSUser.Delete: EntityRelated, EntityDelete {
-    typealias EntityType = WMSUserRow
+    public typealias EntityType = WMSUserRow
 
-    var entity: WMSUserRow {
+    public var entity: WMSUserRow {
         return WMSUserRow(id: id, email: "")
     }
 }
@@ -129,20 +129,20 @@ extension WMSUserRepresentable {
 }
 
 extension WMSUserRow: EntityControllable {
-    init(id: Int) {
+    public init(id: Int) {
         self.id = id
         self.email = ""
     }
 
-    typealias Public = WMSUser
+    public typealias Public = WMSUser
 
-    var `public`: WMSUser {
+    public var `public`: WMSUser {
         return WMSUser(entity: self)
     }
 }
 
 extension WMSUserRow: EntityQueryable {
-    static func whereString(queryString: String) -> String {
+    public static func whereString(queryString: String) -> String {
         return "email LIKE '%\(queryString)%'"
     }
 }
