@@ -89,3 +89,85 @@ extension WMSVehicle: EntityRelated {
 extension WMSVehicle: EntityPut, EntityDelete {
     
 }
+
+// MARK: - WMSVehicle 2
+
+public struct WMSVehicleUserRow {
+    public var WMSVehicle_id: Int
+    public var WMSVehicle_name: String
+    public var WMSVehicle_userID: Int
+    public var WMSUser_id: Int
+    public var WMSUser_email: String
+}
+
+extension WMSVehicleUserRow: DSTwoModelView {
+    public typealias Model1 = WMSVehicleRow
+    public typealias Model2 = WMSUserRow
+
+    public static var entity: String {
+        return tableName
+    }
+
+    public static var join: DSJoinRelationship {
+        return .init(type: .inner, key1: "userID", key2: "id")
+    }
+    public static var model1selectFields: [String] {
+        return WMSVehicleRow.CodingKeys.allCases.map{ $0.rawValue }
+    }
+    public static var model2selectFields: [String] {
+        return WMSUserRow.CodingKeys.allCases.map{ $0.rawValue }
+    }
+
+    public var wmsVehicle2: WMSVehicle2 {
+        let user = WMSUser(id: WMSUser_id, email: WMSUser_email)
+        return WMSVehicle2(id: WMSVehicle_id, name: WMSVehicle_name, user: user)
+    }
+}
+
+extension WMSVehicleUserRow: EntityControllable {
+    var `public`: WMSVehicle2 {
+        let user = WMSUser(id: WMSUser_id, email: WMSUser_email)
+        return WMSVehicle2(id: WMSVehicle_id, name: WMSVehicle_name, user: user)
+    }
+
+    static var primaryKeyString: String {
+        return "WMSVehicle_id"
+    }
+
+    init(id: Int) {
+        self.WMSVehicle_id = id
+        self.WMSVehicle_name = ""
+        self.WMSVehicle_userID = 0
+        self.WMSUser_id = 0
+        self.WMSUser_email = ""
+    }
+
+    typealias Public = WMSVehicle2
+
+    public var id: Int? {
+        get {
+            return WMSVehicle_id
+        }
+        set(newValue) {
+            WMSVehicle_id = newValue ?? 0
+        }
+    }
+
+    public static func revert(on conn: MySQLDatabase.Connection) -> EventLoopFuture<Void> {
+        return conn.future()
+    }
+}
+
+public struct WMSVehicle2: Content {
+    public var id: Int
+    public var name: String
+    public var user: WMSUser
+}
+
+extension WMSVehicle2: EntityRelated {
+    var entity: WMSVehicleUserRow {
+        return WMSVehicleUserRow(WMSVehicle_id: id, WMSVehicle_name: name, WMSVehicle_userID: user.id, WMSUser_id: user.id, WMSUser_email: user.email)
+    }
+
+    typealias EntityType = WMSVehicleUserRow
+}

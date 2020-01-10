@@ -28,7 +28,14 @@ protocol Publicable {
 }
 
 protocol EntityControllable: DSModel, Publicable {
+    static var primaryKeyString: String { get }
     init(id: Int)
+}
+
+extension EntityControllable {
+    static var primaryKeyString: String {
+        return "id"
+    }
 }
 
 protocol EntityQueryable {
@@ -46,7 +53,7 @@ extension EntityControllable {
     }
 
     static func get(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Public> {
-        return first(where: "id = \(id)", req: on).unwrap(or: Abort(.notFound)).map{ $0.public }
+        return first(where: "\(primaryKeyString) = \(id)", req: on).unwrap(or: Abort(.notFound)).map{ $0.public }
     }
 
     static func delete(id: Int, on: DatabaseConnectable) throws -> EventLoopFuture<Void> {
@@ -60,15 +67,15 @@ extension EntityControllable where Self: EntityQueryable {
     }
 }
 
-extension EntityControllable where Self: RowConvertible, Self.RowType == Self {
-    static func create(value: Self, on: DatabaseConnectable) throws -> EventLoopFuture<Self.Public> {
-        return create(value: value.row, req: on).map{ $0.public }
-    }
-
-    static func update(value: Self, on: DatabaseConnectable) throws -> EventLoopFuture<Self.Public> {
-        return update(value: value.row, req: on).map{ $0.public }
-    }
-}
+//extension EntityControllable where Self: RowConvertible, Self.RowType == Self {
+//    static func create(value: Self, on: DatabaseConnectable) throws -> EventLoopFuture<Self.Public> {
+//        return create(value: value.row, req: on).map{ $0.public }
+//    }
+//
+//    static func update(value: Self, on: DatabaseConnectable) throws -> EventLoopFuture<Self.Public> {
+//        return update(value: value.row, req: on).map{ $0.public }
+//    }
+//}
 
 protocol EntityRelated {
     associatedtype EntityType: EntityControllable

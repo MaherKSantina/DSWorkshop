@@ -15,7 +15,7 @@ public class DSWMS {
         migrations.add(model: WMSVehicleRow.self, database: .mysql)
         migrations.add(model: WMSJobRow.self, database: .mysql)
         migrations.add(model: WMSWorkOrderRow.self, database: .mysql)
-        migrations.add(migration: WMSVehicleUser.self, database: .mysql)
+        migrations.add(migration: WMSVehicleUserRow.self, database: .mysql)
     }
 
     public func getAll<T: DSDatabaseReadOnlyInteractable>(type: T.Type, on: DatabaseConnectable) -> Future<[T]> {

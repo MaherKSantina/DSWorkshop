@@ -11,6 +11,12 @@ import FluentMySQL
 import Vapor
 
 public struct WMSUserRow: DSModel {
+
+    enum CodingKeys: String, CodingKey, CaseIterable {
+        case id
+        case email
+    }
+
     public var id: Int?
     public var email: String
 
