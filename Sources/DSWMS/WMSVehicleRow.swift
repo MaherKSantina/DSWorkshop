@@ -40,7 +40,7 @@ public struct WMSVehicle: Content {
         self.userID = userID
     }
 
-    struct Post: Content, DSEntityPost, DSEntityRelated {
+    public struct Post: Content, DSEntityPost, DSEntityRelated {
         var entity: WMSVehicleRow {
             return WMSVehicleRow(id: nil, name: name, userID: userID)
         }
@@ -49,6 +49,11 @@ public struct WMSVehicle: Content {
 
         public var name: String
         public var userID: Int
+
+        public init(name: String, userID: Int) {
+            self.name = name
+            self.userID = userID
+        }
     }
 }
 
