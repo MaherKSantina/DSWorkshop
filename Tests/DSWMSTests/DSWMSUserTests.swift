@@ -5,13 +5,6 @@ import FluentMySQL
 
 final class DSWMSUserTests: WMSTestCase {
 
-    var sut: DSWMS!
-
-    override func setUp() {
-        super.setUp()
-        sut = DSWMS()
-    }
-
     func testGetAllUsers_ShouldGetCorrectly() throws {
         let _ = try WMSUserRow(id: nil, email: "u1@gmail.com").save(on: conn).wait()
         let _ = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()

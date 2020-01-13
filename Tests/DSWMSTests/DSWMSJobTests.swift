@@ -5,13 +5,6 @@ import FluentMySQL
 
 final class DSWMSJobTests: WMSTestCase {
 
-    var sut: DSWMS!
-
-    override func setUp() {
-        super.setUp()
-        sut = DSWMS()
-    }
-
     func testGetAllJobs_ShouldGetCorrectly() throws {
         let _ = try WMSJobRow(id: nil, name: "job1").save(on: conn).wait()
         let _ = try WMSJobRow(id: nil, name: "job2").save(on: conn).wait()

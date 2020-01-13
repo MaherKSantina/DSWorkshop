@@ -5,8 +5,6 @@ import FluentMySQL
 
 final class DSWMSWorkOrderTests: WMSTestCase {
 
-    var sut: DSWMS!
-
     var job1: WMSJobRow!
     var job2: WMSJobRow!
 
@@ -19,7 +17,6 @@ final class DSWMSWorkOrderTests: WMSTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = DSWMS()
 
         user1 = try! WMSUserRow(id: nil, email: "user1@gmail.com").save(on: conn).wait()
         user2 = try! WMSUserRow(id: nil, email: "user2@gmail.com").save(on: conn).wait()

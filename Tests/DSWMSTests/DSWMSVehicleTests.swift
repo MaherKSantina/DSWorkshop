@@ -5,13 +5,6 @@ import FluentMySQL
 
 final class DSWMSVehicleTests: WMSTestCase {
 
-    var sut: DSWMS!
-
-    override func setUp() {
-        super.setUp()
-        sut = DSWMS()
-    }
-
     func testGetAllVehicles_ShouldGetCorrectly() throws {
         let user1 = try WMSUserRow(id: nil, email: "u2@gmail.com").save(on: conn).wait()
         let _ = try WMSVehicleRow(id: nil, name: "v1", userID: try! user1.requireID()).save(on: conn).wait()
