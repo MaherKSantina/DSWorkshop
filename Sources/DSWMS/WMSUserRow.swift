@@ -57,6 +57,10 @@ public struct WMSUser: Content {
         }
 
         public var id: Int
+
+        public init(id: Int) {
+            self.id = id
+        }
     }
 
     public var id: Int
