@@ -34,6 +34,12 @@ public struct WMSVehicle: Content {
     public var name: String
     public var userID: Int
 
+    public init(id: Int, name: String, userID: Int) {
+        self.id = id
+        self.name = name
+        self.userID = userID
+    }
+
     struct Post: Content, DSEntityPost, DSEntityRelated {
         var entity: WMSVehicleRow {
             return WMSVehicleRow(id: nil, name: name, userID: userID)
