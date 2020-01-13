@@ -28,7 +28,7 @@ public struct WMSJobRow {
 
 public struct WMSJob: Content {
 
-    struct Post: EntityPost, EntityRelated {
+    struct Post: DSEntityPost, DSEntityRelated {
         typealias EntityType = WMSJobRow
 
         var entity: WMSJobRow {
@@ -67,7 +67,7 @@ extension WMSJobRow: Hashable {
     }
 }
 
-extension WMSJobRow: EntityControllable {
+extension WMSJobRow: DSEntityControllable {
     public var `public`: WMSJob {
         return WMSJob(id: try! requireID(), name: name)
     }
@@ -86,7 +86,7 @@ extension WMSJobRow: EntityQueryable {
     }
 }
 
-extension WMSJob: EntityRelated {
+extension WMSJob: DSEntityRelated {
     public var entity: WMSJobRow {
         return WMSJobRow(id: id, name: name)
     }
@@ -94,4 +94,4 @@ extension WMSJob: EntityRelated {
     public typealias EntityType = WMSJobRow
 }
 
-extension WMSJob: EntityPost, EntityPut, EntityDelete {  }
+extension WMSJob: DSEntityPost, DSEntityPut, EntityDelete {  }

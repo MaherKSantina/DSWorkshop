@@ -73,14 +73,14 @@ public struct WMSUser: Content {
     }
 }
 
-extension WMSUser: EntityRelated {
+extension WMSUser: DSEntityRelated {
     public typealias EntityType = WMSUserRow
     public var entity: WMSUserRow {
         return WMSUserRow(id: id, email: email)
     }
 }
 
-extension WMSUser.Post: EntityRelated, EntityPost {
+extension WMSUser.Post: DSEntityRelated, DSEntityPost {
     public typealias EntityType = WMSUserRow
 
     public var entity: WMSUserRow {
@@ -88,14 +88,14 @@ extension WMSUser.Post: EntityRelated, EntityPost {
     }
 }
 
-extension WMSUser.Put: EntityRelated, EntityPut {
+extension WMSUser.Put: DSEntityRelated, DSEntityPut {
     public typealias EntityType = WMSUserRow
 
     public var entity: WMSUserRow {
         return WMSUserRow(id: id, email: email)
     }
 }
-extension WMSUser.Delete: EntityRelated, EntityDelete {
+extension WMSUser.Delete: DSEntityRelated, EntityDelete {
     public typealias EntityType = WMSUserRow
 
     public var entity: WMSUserRow {
@@ -128,7 +128,7 @@ extension WMSUserRepresentable {
     }
 }
 
-extension WMSUserRow: EntityControllable {
+extension WMSUserRow: DSEntityControllable {
     public init(id: Int) {
         self.id = id
         self.email = ""

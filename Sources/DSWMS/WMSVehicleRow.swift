@@ -34,7 +34,7 @@ public struct WMSVehicle: Content {
     public var name: String
     public var userID: Int
 
-    struct Post: Content, EntityPost, EntityRelated {
+    struct Post: Content, DSEntityPost, DSEntityRelated {
         var entity: WMSVehicleRow {
             return WMSVehicleRow(id: nil, name: name, userID: userID)
         }
@@ -62,7 +62,7 @@ extension WMSVehicleRow: Hashable {
     }
 }
 
-extension WMSVehicleRow: EntityControllable {
+extension WMSVehicleRow: DSEntityControllable {
     public var `public`: WMSVehicle {
         return WMSVehicle(id: try! requireID(), name: name, userID: userID)
     }
@@ -76,7 +76,7 @@ extension WMSVehicleRow: EntityControllable {
     public typealias Public = WMSVehicle
 }
 
-extension WMSVehicle: EntityRelated {
+extension WMSVehicle: DSEntityRelated {
     public var entity: WMSVehicleRow {
         return WMSVehicleRow(id: id, name: name, userID: userID)
     }
@@ -86,7 +86,7 @@ extension WMSVehicle: EntityRelated {
 
 }
 
-extension WMSVehicle: EntityPut, EntityDelete {
+extension WMSVehicle: DSEntityPut, EntityDelete {
     
 }
 
@@ -124,7 +124,7 @@ extension WMSVehicleUserRow: DSTwoModelView {
     }
 }
 
-extension WMSVehicleUserRow: EntityControllable {
+extension WMSVehicleUserRow: DSEntityControllable {
     public var `public`: WMSVehicle2 {
         let user = WMSUser(id: WMSUser_id, email: WMSUser_email)
         return WMSVehicle2(id: WMSVehicle_id, name: WMSVehicle_name, user: user)
@@ -164,7 +164,7 @@ public struct WMSVehicle2: Content {
     public var user: WMSUser
 }
 
-extension WMSVehicle2: EntityRelated {
+extension WMSVehicle2: DSEntityRelated {
     public var entity: WMSVehicleUserRow {
         return WMSVehicleUserRow(WMSVehicle_id: id, WMSVehicle_name: name, WMSVehicle_userID: user.id, WMSUser_id: user.id, WMSUser_email: user.email)
     }

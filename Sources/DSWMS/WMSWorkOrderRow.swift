@@ -50,7 +50,7 @@ extension WMSWorkOrderRow: Hashable {
     }
 }
 
-extension WMSWorkOrderRow: EntityControllable {
+extension WMSWorkOrderRow: DSEntityControllable {
     public var `public`: WMSWorkOrder {
         return WMSWorkOrder(id: try! requireID(), jobID: jobID, vehicleID: vehicleID, notes: notes, date: date)
     }
@@ -66,7 +66,7 @@ extension WMSWorkOrderRow: EntityControllable {
     public typealias Public = WMSWorkOrder
 }
 
-public struct WMSWorkOrder: Content, EntityPut {
+public struct WMSWorkOrder: Content, DSEntityPut {
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case id
         case jobID
@@ -89,7 +89,7 @@ public struct WMSWorkOrder: Content, EntityPut {
         self.date = date
     }
 
-    struct Post: EntityRelated, EntityPost {
+    struct Post: DSEntityRelated, DSEntityPost {
         var entity: WMSWorkOrderRow {
             return WMSWorkOrderRow(id: nil, jobID: jobID, vehicleID: vehicleID, notes: notes, date: date)
         }
@@ -104,7 +104,7 @@ public struct WMSWorkOrder: Content, EntityPut {
     }
 }
 
-extension WMSWorkOrder: EntityRelated {
+extension WMSWorkOrder: DSEntityRelated {
     public var entity: WMSWorkOrderRow {
         return WMSWorkOrderRow(id: id, jobID: jobID, vehicleID: vehicleID, notes: notes, date: date)
     }
