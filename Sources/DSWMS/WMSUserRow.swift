@@ -95,7 +95,7 @@ extension WMSUser.Put: DSEntityRelated, DSEntityPut {
         return WMSUserRow(id: id, email: email)
     }
 }
-extension WMSUser.Delete: DSEntityRelated, EntityDelete {
+extension WMSUser.Delete: DSEntityRelated, DSEntityDelete {
     public typealias EntityType = WMSUserRow
 
     public var entity: WMSUserRow {
@@ -141,7 +141,7 @@ extension WMSUserRow: DSEntityControllable {
     }
 }
 
-extension WMSUserRow: EntityQueryable {
+extension WMSUserRow: DSEntityQueryable {
     public static func whereString(queryString: String) -> String {
         return "email LIKE '%\(queryString)%'"
     }

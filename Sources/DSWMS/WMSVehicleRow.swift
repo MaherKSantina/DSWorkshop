@@ -86,7 +86,7 @@ extension WMSVehicle: DSEntityRelated {
 
 }
 
-extension WMSVehicle: DSEntityPut, EntityDelete {
+extension WMSVehicle: DSEntityPut, DSEntityDelete {
     
 }
 

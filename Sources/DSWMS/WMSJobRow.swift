@@ -80,7 +80,7 @@ extension WMSJobRow: DSEntityControllable {
     public typealias Public = WMSJob
 }
 
-extension WMSJobRow: EntityQueryable {
+extension WMSJobRow: DSEntityQueryable {
     public static func whereString(queryString: String) -> String {
         return "name LIKE '%\(queryString)%'"
     }
@@ -94,4 +94,4 @@ extension WMSJob: DSEntityRelated {
     public typealias EntityType = WMSJobRow
 }
 
-extension WMSJob: DSEntityPost, DSEntityPut, EntityDelete {  }
+extension WMSJob: DSEntityPost, DSEntityPut, DSEntityDelete {  }
