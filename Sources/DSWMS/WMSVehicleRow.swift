@@ -41,11 +41,11 @@ public struct WMSVehicle: Content {
     }
 
     public struct Post: Content, DSEntityPost, DSEntityRelated {
-        var entity: WMSVehicleRow {
+        public var entity: WMSVehicleRow {
             return WMSVehicleRow(id: nil, name: name, userID: userID)
         }
 
-        typealias EntityType = WMSVehicleRow
+        public typealias EntityType = WMSVehicleRow
 
         public var name: String
         public var userID: Int
