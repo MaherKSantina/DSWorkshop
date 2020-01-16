@@ -104,6 +104,15 @@ extension WMSVehicle: DSEntityPut, DSEntityDelete {
 // MARK: - WMSVehicle 2
 
 public struct WMSVehicleUserRow {
+
+    enum CodingKeys: String, CodingKey {
+        case WMSVehicle_id
+        case WMSVehicle_name
+        case WMSVehicle_userID
+        case WMSUser_id
+        case WMSUser_email
+    }
+
     public var WMSVehicle_id: Int
     public var WMSVehicle_name: String
     public var WMSVehicle_userID: Int
@@ -120,7 +129,7 @@ extension WMSVehicleUserRow: DSTwoModelView {
     }
 
     public static var join: DSJoinRelationship {
-        return .init(type: .inner, key1: "userID", key2: "id")
+        return .init(type: .inner, key1: Model1.CodingKeys.userID.rawValue, key2: Model2.CodingKeys.id.rawValue)
     }
     public static var model1selectFields: [String] {
         return WMSVehicleRow.CodingKeys.allCases.map{ $0.rawValue }
@@ -142,7 +151,7 @@ extension WMSVehicleUserRow: DSEntityControllable {
     }
 
     public static var primaryKeyString: String {
-        return "WMSVehicle_id"
+        return CodingKeys.WMSVehicle_id.rawValue
     }
 
     public init(id: Int) {

@@ -107,31 +107,6 @@ extension WMSUser.Delete: DSEntityRelated, DSEntityDelete {
     }
 }
 
-extension WMSUser: WMSUserRepresentable {
-    public var wmsUserId: Int {
-        return id
-    }
-
-    public var wmsUserEmail: String {
-        return email
-    }
-}
-
-public protocol WMSUserConvertible {
-    var wmsUser: WMSUser { get }
-}
-
-public protocol WMSUserRepresentable: WMSUserConvertible {
-    var wmsUserId: Int { get }
-    var wmsUserEmail: String { get }
-}
-
-extension WMSUserRepresentable {
-    public var wmsUser: WMSUser {
-        return WMSUser(id: wmsUserId, email: wmsUserEmail)
-    }
-}
-
 extension WMSUserRow: DSEntityControllable {
     public init(id: Int) {
         self.id = id

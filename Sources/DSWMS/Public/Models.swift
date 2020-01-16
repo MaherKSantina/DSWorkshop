@@ -16,13 +16,3 @@ public struct WMSAuthUser: Content {
 public struct WMSAccess: Content {
     public var token: String
 }
-
-extension WMSVehicleUserRow: WMSUserRepresentable {
-    public var wmsUserId: Int {
-        return WMSUser_id
-    }
-
-    public var wmsUserEmail: String {
-        return WMSUser_email
-    }
-}
