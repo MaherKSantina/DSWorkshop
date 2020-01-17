@@ -70,4 +70,24 @@ final class DSWMSWorkOrderTests: WMSTestCase {
         let users = try WMSWorkOrder.getAll(on: conn).wait()
         XCTAssertEqual(users.count, 0)
     }
+
+    func test_GetAll2_ShouldGetProperly() throws {
+        _ = try WMSWorkOrderRow(id: nil, jobID: 2, vehicleID: 1, notes: "Note", date: Date()).save(on: conn).wait()
+        guard let viewItem = try WMSWorkOrder2.getAll(on: conn).wait().first else { XCTFail(); return }
+        XCTAssertEqual(viewItem.id, 1)
+        XCTAssertEqual(viewItem.vehicle.name, "Vehicle 1")
+        XCTAssertEqual(viewItem.job.name, "Job2")
+    }
+
+    func test_GetAll3_ShouldGetProperly() throws {
+        _ = try WMSUserRow(id: nil, email: "email").save(on: conn).wait()
+        _ = try WMSVehicleRow(id: nil, name: "V1", userID: 1).save(on: conn).wait()
+        _ = try WMSJobRow(id: nil, name: "Job1").save(on: conn).wait()
+        _ = try WMSWorkOrderRow(id: nil, jobID: 1, vehicleID: 1, notes: "Note", date: Date()).save(on: conn).wait()
+        guard let viewItem = try WMSWorkOrder3.getAll(on: conn).wait().first else { XCTFail(); return }
+        XCTAssertEqual(viewItem.id, 1)
+        XCTAssertEqual(viewItem.vehicle.name, "Vehicle 1")
+        XCTAssertEqual(viewItem.job.name, "Job1")
+        XCTAssertEqual(viewItem.vehicle.user.email, "user1@gmail.com")
+    }
 }
